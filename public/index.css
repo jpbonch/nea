@@ -1,0 +1,44 @@
+.box {
+    background-color: darkgreen;
+    width: 100px;
+    height: 50px;
+}
+
+body{
+    overflow: hidden;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+nav{
+    margin: 0;
+    width: 100%;
+    height: 70px;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+}
+
+.navbutton{
+    width: 100px;
+    height: 30px
+}
+
+.navbutton:hover{
+    cursor: pointer;
+}
+
+#authbox{
+    margin-left: auto;
+    margin-right: 30px;
+}
+
+#selectEventDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 500px;
+    margin-left: 30px;
+}
