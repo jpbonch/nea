@@ -44,7 +44,7 @@ app.post("/write/:eventType/:eventId", function (req, res) {
     }
   );
 
-  db.run(`INSERT INTO "9484" VALUES (?, ?, ?)`, [username, content, time], function(err) {
+  db.run(`INSERT INTO "${req.params.eventId}" VALUES (?, ?, ?)`, [username, content, time], function(err) {
     if (err) {
       console.error(err.message);
     }
@@ -64,8 +64,8 @@ app.get("/data/:eventType/:eventId", function (req, res) {
   // load nba/gameid databse
   // add all
   let db = new sqlite3.Database(
-    `./db/${req.params.eventType}.db`,
-    sqlite3.OPEN_READONLY,
+    `./db/${req.params.eventType}.db`, // can be nba, 
+    sqlite3.OPEN_READWRITE,
     (err) => {
       if (err) {
         console.error(err.message);
@@ -76,16 +76,24 @@ app.get("/data/:eventType/:eventId", function (req, res) {
   var query = `SELECT Username, Time, Content FROM "${req.params.eventId}"`;
   db.all(query, [], (err, rows) => {
     if (err) {
-      console.error(err.message);
-    } // create new table when error
+      // create new table when error with columns username, content, time
+      console.error("table does not exist");
+      var query = `CREATE TABLE IF NOT EXISTS [${req.params.eventId}] (
+            Username  TEXT NOT NULL,
+            Content TEXT,
+            Time    TEXT   NOT NULL
+      )`;
+      db.run(query, function(err) {
+        if (err) {
+          console.error(err.message);
+        }
+        console.log(`Table ${req.params.eventId} has been created`);
+      });
+      res.send({ message: [] });
+    } else {
     res.send({ message: rows });
+    }
   });
-  // if table not found
-  //   CREATE TABLE [9484] (
-  //     Username  STRING NOT NULL,
-  //     Content STRING,
-  //     Time    TIME   NOT NULL
-  // );
 
   db.close((err) => {
     if (err) {
@@ -101,7 +109,7 @@ app.get("/events/nba", function (req, res) {
     url: "https://api-nba-v1.p.rapidapi.com/games/date/2021-08-08",
     headers: {
       "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
-      "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt"),
+      "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt")
     },
   };
   axios
