@@ -9,6 +9,11 @@
     <div id="chatBox">
 
     </div>
+    <input type="text" id="messageInput"/>
+    <button id="submitMessageButton">Send</button>
+
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    
     <script>
         [eventType, eventId] = window.location.pathname.split('/').slice(2);
         console.log(eventType) //caht
@@ -19,28 +24,60 @@
 
         function displayMessages(messages){
             for (let message of messages){
-                var messageDiv = document.createElement("div");
-                messageDiv.className = "messageDiv";
+                var messageDiv = createMessage(message["Username"], message["Content"], message["Time"])
 
-                var username =  document.createElement("span");
-                username.innerText = message["Username"];
-                messageDiv.appendChild(username)
-
-                var content =  document.createElement("span");
-                content.innerText = message["Content"];
-                messageDiv.appendChild(content)
-
-                var time =  document.createElement("span");
-                time.innerText = message["Time"];
-                messageDiv.appendChild(time)
-
-
-                
                 document.getElementById("chatBox").appendChild(messageDiv);
             }
         }
 
-        
+        function createMessage(username, content, time){
+            var messageDiv = document.createElement("div");
+            messageDiv.className = "messageDiv";
+
+            var usernameSpan =  document.createElement("span");
+            usernameSpan.innerText = username;
+            messageDiv.appendChild(usernameSpan);
+
+            var contentSpan =  document.createElement("span");
+            contentSpan.innerText = content;
+            messageDiv.appendChild(contentSpan);
+
+            var timeSpan = document.createElement("span");
+            timeSpan.innerText = time;
+            messageDiv.appendChild(timeSpan);
+
+            return messageDiv;
+        }
+
+
     </script>
+
+<script>
+    var socket = io();
+  
+    var messageBox = document.getElementById('chatBox');
+    var submitButton = document.getElementById('submitMessageButton');
+    var messageInput = document.getElementById('messageInput');
+  
+    submitButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (messageInput.value) {
+        let msg = {username: "lol", content: messageInput.value, time: getCurrentDate()}
+        socket.emit('chat message', msg);
+        messageInput.value = '';
+      }
+    });
+  
+    socket.on('chat message', function(msg) {
+      var messageDiv = createMessage(msg.username, msg.content, msg.time);
+      messageBox.appendChild(messageDiv);
+      window.scrollTo(0, document.body.scrollHeight); // CHECK
+    });
+
+    function getCurrentDate(){
+        var date = new Date();
+        return date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours() ).slice(-2) + ":"+ ("0" + date.getMinutes()).slice(-2) + ":" +("0" + date.getSeconds()).slice(-2);
+    }
+  </script>
 </body>
 </html>

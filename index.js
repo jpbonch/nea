@@ -9,9 +9,22 @@ const { default: axios } = require("axios");
 const app = express();
 app.use(express.static("public"));
 
+const server = http.createServer(app);
+server.listen(80, () => {console.log('listening on port 80')});
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
+
+io.on('connection', (socket) => {
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+  });
+});
+
 
 app.get("/chat/*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/chat.html"));
@@ -29,7 +42,7 @@ app.get("/data/:eventType/:eventId", function (req, res) {
       if (err) {
         console.error(err.message);
       }
-      console.log("Connected to the database.");
+      // CONNECTED TO THE DATABASE
       var query = `SELECT Username, Time, Content FROM "${req.params.eventId}"`;
       db.all(query, [], (err, rows) => {
         if (err) {
@@ -50,7 +63,7 @@ app.get("/data/:eventType/:eventId", function (req, res) {
     if (err) {
       console.error(err.message);
     }
-    console.log("Close the database connection.");
+    // CLOSED THE DATABASE CONNECTION
   });
 });
 
@@ -71,5 +84,4 @@ app.get("/events/nba", function (req, res) {
     });
 });
 
-http.createServer(app).listen(80);
-console.log("Server started at http://localhost:" + 80);
+
