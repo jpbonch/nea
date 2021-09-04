@@ -65,6 +65,15 @@
         let msg = {username: "lol", content: messageInput.value, time: getCurrentDate()}
         socket.emit('chat message', msg);
         messageInput.value = '';
+
+        fetch(`/write/${eventType}/${eventId}`, {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(msg)
+            });
       }
     });
   

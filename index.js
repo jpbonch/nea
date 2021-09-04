@@ -7,6 +7,7 @@ const sqlite3 = require("sqlite3").verbose();
 const { default: axios } = require("axios");
 
 const app = express();
+app.use(express.json()) 
 app.use(express.static("public"));
 
 const server = http.createServer(app);
@@ -30,6 +31,33 @@ app.get("/chat/*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/chat.html"));
 });
 
+app.post("/write/:eventType/:eventId", function (req, res) {
+  var {username, content, time} = req.body;
+
+  let db = new sqlite3.Database(
+    `./db/${req.params.eventType}.db`,
+    sqlite3.OPEN_READWRITE,
+    (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+    }
+  );
+
+  db.run(`INSERT INTO "9484" VALUES (?, ?, ?)`, [username, content, time], function(err) {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log(`A row has been inserted with rowid ${this.lastID}`);
+  });
+
+  db.close((err) => {
+    if (err) {
+      console.error(err.message);
+    }
+  });
+});
+
 app.get("/data/:eventType/:eventId", function (req, res) {
   // eventtpe= database, eventid = table
   // req.params.eventId
@@ -42,19 +70,19 @@ app.get("/data/:eventType/:eventId", function (req, res) {
       if (err) {
         console.error(err.message);
       }
-      // CONNECTED TO THE DATABASE
-      var query = `SELECT Username, Time, Content FROM "${req.params.eventId}"`;
-      db.all(query, [], (err, rows) => {
-        if (err) {
-          throw err;
-        } // create new table when error
-        res.send({ message: rows });
-      });
     }
   );
+
+  var query = `SELECT Username, Time, Content FROM "${req.params.eventId}"`;
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+    } // create new table when error
+    res.send({ message: rows });
+  });
   // if table not found
   //   CREATE TABLE [9484] (
-  //     UserId  STRING NOT NULL,
+  //     Username  STRING NOT NULL,
   //     Content STRING,
   //     Time    TIME   NOT NULL
   // );
