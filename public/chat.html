@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link rel="stylesheet" href="chat.css" />
+</head>
+<body>
+    <div id="chatBox">
+
+    </div>
+    <script>
+        [eventType, eventId] = window.location.pathname.split('/').slice(2);
+        console.log(eventType) //caht
+        console.log(eventId)
+        fetch("/data/" + eventType + "/" + eventId)
+            .then((response) => response.json())
+            .then((jsonResult) => displayMessages(jsonResult.message))
+
+        function displayMessages(messages){
+            for (let message of messages){
+                var messageDiv = document.createElement("div");
+                messageDiv.className = "messageDiv";
+
+                var username =  document.createElement("span");
+                username.innerText = message["Username"];
+                messageDiv.appendChild(username)
+
+                var content =  document.createElement("span");
+                content.innerText = message["Content"];
+                messageDiv.appendChild(content)
+
+                var time =  document.createElement("span");
+                time.innerText = message["Time"];
+                messageDiv.appendChild(time)
+
+
+                
+                document.getElementById("chatBox").appendChild(messageDiv);
+            }
+        }
+
+        
+    </script>
+</body>
+</html>

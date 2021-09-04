@@ -1,0 +1,9 @@
+html{
+    background-color: aliceblue;
+}
+
+.messageDiv{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
