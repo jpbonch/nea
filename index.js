@@ -1,10 +1,9 @@
 const express = require("express");
 const path = require("path");
-const fetch = require("axios");
+const fetch = require("node-fetch");
 const fs = require("fs");
 var http = require("http");
 const sqlite3 = require("sqlite3").verbose();
-const { default: axios } = require("axios");
 
 const app = express();
 app.use(express.json()) 
@@ -104,20 +103,15 @@ app.get("/data/:eventType/:eventId", function (req, res) {
 });
 
 app.get("/events/nba", function (req, res) {
-  const options = {
+  fetch("https://api-nba-v1.p.rapidapi.com/games/date/2021-08-08", {
     method: "GET",
-    url: "https://api-nba-v1.p.rapidapi.com/games/date/2021-08-08",
     headers: {
       "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
       "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt")
-    },
-  };
-  axios
-    .request(options)
-    .then((response) => res.send(response.data))
-    .catch(function (error) {
-      console.error(error);
-    });
+    }
+  }).then((response) => response.json())
+  .then(jsonResult => res.send(jsonResult))
+  .catch((error) => console.log(error));
 });
 
 
