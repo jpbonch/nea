@@ -21,7 +21,7 @@ body{
     outline: none;
     color: white;
     padding: 7px;
-    width: 80%
+    width: 88%;
 }
 
 #submitMessageButton{
@@ -29,7 +29,9 @@ body{
     border: 2px solid white;
     border-radius: 7px;
     color: white;
-    padding: 7px
+    padding: 7px;
+    outline: 0;
+    margin-left: 5px
 }
 
 #submitMessageButton:hover{
@@ -61,7 +63,7 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
     width: clamp(400px, 60%, 800px);
-    height: 60%
+    height: 70%;
 }
 
 .fade{
@@ -70,4 +72,21 @@ body{
     height: 20%;
     background-image: linear-gradient(to top, transparent, #2A222C);
     z-index: 10;
+    top: -1px;
+    pointer-events: none;
+}
+
+#inputDiv{
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+}
+
+#chatBox{
+  position: absolute;
+  overflow-y: scroll;
+  height: 90%;
+  top: 0;
+  width: 100%;
 }

@@ -4,7 +4,7 @@
     height: 100px;
     /* margin: 100px; */
     border: 6px solid transparent;
-    border-image: linear-gradient(to right, red , yellow);
+    border-image: linear-gradient(to right, orangered , orange);
     border-image-slice: 1;
     color: white;
     border-radius: 5px;

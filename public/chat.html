@@ -25,12 +25,14 @@
     <div id="chatArea">
     <div class="fade"></div>
     <div id="chatBox"></div>
+    <div id="inputDiv">
     <input type="text" id="messageInput"/>
     <button id="submitMessageButton">SEND</button>
+  </div>
 </div>
 
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
-    
+
     <script>
         [eventType, eventId] = window.location.pathname.split('/').slice(2);
         console.log(eventType) //caht
@@ -39,11 +41,26 @@
             .then((response) => response.json())
             .then((jsonResult) => displayMessages(jsonResult.message))
 
+        function formatDate(inputDateString){
+          var inputDate = new Date(inputDateString);
+          var todaysDate = new Date();
+          if(inputDate.toDateString() == todaysDate.toDateString()) {
+            var time = inputDate.getHours() + ":" + inputDate.getMinutes();
+          } else {
+            var time = message["Time"].split(" ")[0];
+          }
+          return time;
+        }
+
         function displayMessages(messages){
             for (let message of messages){
-                var messageDiv = createMessage(message["Username"], message["Content"], message["Time"])
+                // 2020-09-09 19:09:09
+                var time = formatDate(message["Time"]);
+                var messageDiv = createMessage(message["Username"], message["Content"], time)
 
-                document.getElementById("chatBox").appendChild(messageDiv);
+                var chatbox = document.getElementById("chatBox");
+                chatbox.appendChild(messageDiv);
+                chatbox.scrollTop = chatbox.scrollHeight;
             }
         }
 
@@ -74,11 +91,11 @@
 
 <script>
     var socket = io();
-  
+
     var messageBox = document.getElementById('chatBox');
     var submitButton = document.getElementById('submitMessageButton');
     var messageInput = document.getElementById('messageInput');
-  
+
     submitButton.addEventListener('click', function(e) {
       e.preventDefault();
       if (messageInput.value) {
@@ -96,10 +113,12 @@
             });
       }
     });
-  
+
     socket.on('chat message', function(msg) {
-      var messageDiv = createMessage(msg.username, msg.content, msg.time);
+      var time = formatDate(msg.time);
+      var messageDiv = createMessage(msg.username, msg.content, time);
       messageBox.appendChild(messageDiv);
+      messageBox.scrollTop = messageBox.scrollHeight;
       window.scrollTo(0, document.body.scrollHeight); // CHECK
     });
 

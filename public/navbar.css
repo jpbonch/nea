@@ -21,7 +21,7 @@ nav{
     font-size: 30px;
     border-radius: 10px;
     font-weight: bold;
-    transition: all 1s;
+    transition: background-image 1s;
 }
 
 .navbutton:hover{
