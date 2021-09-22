@@ -1,4 +1,5 @@
 keys
 node_modules
-db
+database.db
 notes.txt
+lol.json

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/jpbonch/nea#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mustache": "^4.2.0",
     "node-fetch": "^2.6.1",
     "socket.io": "^4.2.0",
     "sqlite3": "^5.0.2"

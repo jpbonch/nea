@@ -1,0 +1,20 @@
+CREATE TABLE events (
+    eventId        INTEGER PRIMARY KEY AUTOINCREMENT
+                           UNIQUE
+                           NOT NULL,
+    startTimeUTC   TEXT    NOT NULL,
+    statusGame     TEXT    NOT NULL,
+    league         TEXT,
+    arena          TEXT,
+    city           TEXT,
+    country        TEXT,
+    currentPeriod  TEXT    NOT NULL,
+    vTeamShortName TEXT    NOT NULL,
+    vTeamFullName  TEXT    NOT NULL,
+    vTeamLogo      TEXT    NOT NULL,
+    vTeamScore     TEXT    NOT NULL,
+    hTeamShortName TEXT    NOT NULL,
+    hTeamFullName  TEXT    NOT NULL,
+    hTeamLogo      TEXT    NOT NULL,
+    hTeamScore     TEXT    NOT NULL
+);

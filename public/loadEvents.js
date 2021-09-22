@@ -1,3 +1,6 @@
+// function todayOrYesterday(date){
+//   if
+// }
 
 function loadNbaEvents(){
     fetch("/events/nba")

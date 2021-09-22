@@ -60,7 +60,7 @@
 
                 var chatbox = document.getElementById("chatBox");
                 chatbox.appendChild(messageDiv);
-                chatbox.scrollTop = chatbox.scrollHeight;
+
             }
         }
 
@@ -90,6 +90,8 @@
     </script>
 
 <script>
+var chatbox = document.getElementById("chatBox");
+  chatbox.scrollTop = chatbox.scrollHeight;
     var socket = io();
 
     var messageBox = document.getElementById('chatBox');
