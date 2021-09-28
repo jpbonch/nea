@@ -67,12 +67,10 @@ body{
 }
 
 .fade{
-    position: absolute;
     width: 100%;
     height: 20%;
     background-image: linear-gradient(to top, transparent, #2A222C);
     z-index: 10;
-    top: -1px;
     pointer-events: none;
 }
 
@@ -85,8 +83,11 @@ body{
 
 #chatBox{
   position: absolute;
+  display: flex;
+  flex-direction: column-reverse;
   overflow-y: scroll;
   height: 90%;
-  top: 0;
+  bottom: 0;
+  margin-bottom: 40px;
   width: 100%;
 }

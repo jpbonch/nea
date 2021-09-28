@@ -1,0 +1,31 @@
+ping api often instead of every time user requests webpage, because of limited API calls.
+
+gitignore for keys, node_modules, db
+
+using node server instead of...
+
+minimising dependencies
+
+sending data through json
+
+using cdns to serve files
+
+using socket.io to abstract websockets
+
+https certificates
+
+making calls through server so api keys are hidden
+
+automatic redirect to https
+
+semantic html
+
+split up js files and styles
+
+using vanillajs instead of frontend frameworks
+
+one table for storing messages, normalisation & structure
+
+model-view-controller
+
+how many days ahead request games?

@@ -20,4 +20,6 @@ function loadNbaEvents(){
         }
     }
 }
+
+<div></div>
 document.getElementById("nbaButton").addEventListener("click", loadNbaEvents, false)

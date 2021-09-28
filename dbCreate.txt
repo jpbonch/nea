@@ -2,6 +2,7 @@ CREATE TABLE events (
     eventId        INTEGER PRIMARY KEY AUTOINCREMENT
                            UNIQUE
                            NOT NULL,
+    sport          TEXT    NOT NULL,
     startTimeUTC   TEXT    NOT NULL,
     statusGame     TEXT    NOT NULL,
     league         TEXT,
@@ -17,4 +18,24 @@ CREATE TABLE events (
     hTeamFullName  TEXT    NOT NULL,
     hTeamLogo      TEXT    NOT NULL,
     hTeamScore     TEXT    NOT NULL
+);
+
+
+CREATE TABLE users (
+    userId         INTEGER PRIMARY KEY
+                           UNIQUE
+                           NOT NULL,
+    displayName    TEXT    NOT NULL,
+    email          TEXT    NOT NULL,
+    profilePicture TEXT    NOT NULL,
+    passwordHash   TEXT    NOT NULL
+);
+
+CREATE TABLE messages (
+    userId      INTEGER REFERENCES users (userId)
+                        NOT NULL
+                        UNIQUE,
+    content     TEXT,
+    time        TEXT    NOT NULL,
+    eventId        INTEGER    NOT NULL
 );
