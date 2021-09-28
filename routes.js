@@ -2,6 +2,7 @@ const path = require("path");
 const fetch = require("node-fetch");
 const fs = require("fs");
 const sqlite3 = require("sqlite3").verbose();
+var helper = require('./helpers.js');
 
 
 function createRoutes(app){
@@ -26,7 +27,7 @@ function createRoutes(app){
     db.all(query, [], (err, rows) => {
       if (err) {console.error(err)}
       console.log(rows)
-      res.render("chat", {messages:rows});
+      res.render("chat", {messages:rows, helper:helper});
     });
 
     db.close((err) => {

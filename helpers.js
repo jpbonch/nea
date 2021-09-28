@@ -4,7 +4,11 @@ function formatDate(inputDateString){
   if(inputDate.toDateString() == todaysDate.toDateString()) {
     var time = inputDate.getHours() + ":" + inputDate.getMinutes();
   } else {
-    var time = message["Time"].split(" ")[0];
+    var time = message.time.split(" ")[0];
   }
   return time;
+}
+
+module.exports = {
+  formatDate: formatDate
 }
