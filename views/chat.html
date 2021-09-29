@@ -26,7 +26,7 @@
     <div id="chatBox">
       <% for(message of messages) { %>
             <div class="messageDiv">
-            <span class="username">display name</span>
+            <span class="displayName"><%= message.displayName %></span>
             <span class="content"><%= message.content %></span>
             <span class="time"><%= helper.formatDate(message.time) %></span>
             </div>
@@ -40,8 +40,8 @@
 
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
 <script>
-var chatbox = document.getElementById("chatBox");
-  chatbox.scrollTop = chatbox.scrollHeight;
+    var chatbox = document.getElementById("chatBox");
+    chatbox.scrollTop = chatbox.scrollHeight;
     var socket = io();
 
     var messageBox = document.getElementById('chatBox');
@@ -51,7 +51,8 @@ var chatbox = document.getElementById("chatBox");
     submitButton.addEventListener('click', function(e) {
       e.preventDefault();
       if (messageInput.value) {
-        let msg = {userId: 1, displayName:"Lol", content: messageInput.value, time: getCurrentDate(), eventId:1}
+        // get uuser id and displayname from session
+        let msg = {userId: 1, displayName:"Lol", content: messageInput.value, time: getCurrentDate(), eventId:"<%= eventId %>"}
         socket.emit('chat message', msg);
         messageInput.value = '';
 
@@ -67,11 +68,15 @@ var chatbox = document.getElementById("chatBox");
     });
 
     socket.on('chat message', function(msg) {
-      var time = formatDate(msg.time);
-      var messageDiv = createMessage(msg.username, msg.content, time);
-      messageBox.appendChild(messageDiv);
+      var formatDate = <%- helper.formatDate %>;
+      var time = formatDate(msg.time)
+      // var time = formatDate(msg.time)
+      messageBox.innerHTML += `<div class='messageDiv'>
+      <span class="displayName">${msg.displayName}</span>
+      <span class="content">${msg.content}</span>
+      <span class="time">${time}</span>
+      </div>`
       messageBox.scrollTop = messageBox.scrollHeight;
-      window.scrollTo(0, document.body.scrollHeight); // CHECK
     });
 
     function getCurrentDate(){

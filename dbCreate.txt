@@ -32,10 +32,10 @@ CREATE TABLE users (
 );
 
 CREATE TABLE messages (
-    userId      INTEGER REFERENCES users (userId)
-                        NOT NULL
-                        UNIQUE,
-    content     TEXT,
-    time        TEXT    NOT NULL,
-    eventId        INTEGER    NOT NULL
+    userId  INTEGER REFERENCES users (userId)
+                    NOT NULL,
+    content TEXT,
+    time    TEXT    NOT NULL,
+    eventId INTEGER REFERENCES events (eventId)
+                    NOT NULL
 );

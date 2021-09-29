@@ -23,12 +23,17 @@ function createRoutes(app){
       }
     );
 
-    var query = `SELECT content, time FROM "messages" WHERE eventId = ${req.params.eventId}`;
+    var query = `SELECT messages.content, messages.time, users.displayName
+    FROM messages
+    JOIN users ON messages.userId=users.userId
+    WHERE eventId = ${req.params.eventId}`;
     db.all(query, [], (err, rows) => {
       if (err) {console.error(err)}
       console.log(rows)
-      res.render("chat", {messages:rows, helper:helper});
+      res.render("chat", {messages:rows, helper:helper, eventId:req.params.eventId});
     });
+
+
 
     db.close((err) => {
       if (err) {console.error(err.message)}
@@ -48,8 +53,8 @@ function createRoutes(app){
         }
       }
     );
-    db.run(`INSERT INTO "messages" VALUES (?, ?, ?, ?, ?)`,
-    [userId, displayName, content, time, eventId],
+    db.run(`INSERT INTO "messages" VALUES (?, ?, ?, ?)`,
+    [userId, content, time, eventId],
     function(err) {
       if (err) {
         console.error(err.message);
