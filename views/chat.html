@@ -69,13 +69,13 @@
 
     socket.on('chat message', function(msg) {
       var formatDate = <%- helper.formatDate %>;
-      var time = formatDate(msg.time)
+      var time = formatDate(msg.time);
       // var time = formatDate(msg.time)
-      messageBox.innerHTML += `<div class='messageDiv'>
+      messageBox.innerHTML = `<div class='messageDiv'>
       <span class="displayName">${msg.displayName}</span>
       <span class="content">${msg.content}</span>
       <span class="time">${time}</span>
-      </div>`
+      </div>` + messageBox.innerHTML;
       messageBox.scrollTop = messageBox.scrollHeight;
     });
 
