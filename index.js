@@ -5,7 +5,8 @@ const { router } = require("./routes.js");
 var path = require ('path');
 const sqlite3 = require("sqlite3").verbose();
 const bodyParser = require("body-parser")
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
+var helper = require('./helpers.js');
 
 
 
@@ -18,8 +19,22 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cookieParser());
+app.use(cookieParser());
 
+app.use((req, res, next) => {
+    // Get auth token from the cookies
+    const authToken = req.cookies['AuthToken'];
+    // Inject the user to the request
+    // Find user where authtoken = authToken
+    var db = helper.openDB();
+    var query = `SELECT userId FROM users WHERE authToken="${authToken}"`;
+    db.all(query, [], (err, rows) => {
+      if (err) {console.error(err)}
+      if (rows.length > 0){
+        req.userId = rows[0].userId;
+    }
+    next();
+})});
 
 router(app)
 

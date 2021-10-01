@@ -7,15 +7,14 @@ var helper = require('./helpers.js');
 
 function createRoutes(app){
 
-  app.get("/", function (req, res) {
+  app.get("/app", function (req, res) {
     var db = helper.openDB();
 
     var query = `SELECT *
     FROM events`;
     db.all(query, [], (err, rows) => {
       if (err) {console.error(err)}
-      console.log(rows)
-      res.render("index", {events:rows})
+      res.render("app", {events:rows})
     });
 
 
@@ -35,7 +34,6 @@ function createRoutes(app){
     WHERE eventId = ${req.params.eventId}`;
     db.all(query, [], (err, rows) => {
       if (err) {console.error(err)}
-      console.log(rows)
       res.render("chat", {messages:rows, helper:helper, eventId:req.params.eventId});
     });
 
@@ -62,7 +60,6 @@ function createRoutes(app){
 
   app.post("/register", function (req, res) {
     var { email, password, confirmPassword } = req.body;
-    console.log(req.body)
     if (password == confirmPassword){
       var db = helper.openDB();
       // if user already exists
@@ -74,10 +71,11 @@ function createRoutes(app){
                 message: 'User already registered.',
                 messageClass: 'failure'
             });
+            db.close((err) => helper.errorCatch(err));
             return;
         }
         var hash = helper.hashPassword(password);
-        db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?)`,
+        db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
                [email, hash],
                (err) => helper.errorCatch(err));
 
@@ -98,6 +96,41 @@ function createRoutes(app){
   app.get('/login', (req, res) => {
     res.render('login');
   });
+
+  app.post('/login', (req, res) => {
+      var { email, password } = req.body;
+      var hash = helper.hashPassword(password);
+
+      var db = helper.openDB();
+      var query = `SELECT userId FROM users WHERE email="${email}" AND passwordHash="${hash}"`;
+      db.all(query, [], (err, rows) => {
+        if (err) {console.error(err)}
+        if (rows.length > 0){
+          var userId = rows[0].userId;
+          const authToken = helper.genAuthToken();
+          // Store authentication token
+          console.log(authToken, userId)
+          db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
+                 (err) => helper.errorCatch(err));
+          // Setting the auth token in cookies
+          res.cookie('AuthToken', authToken);
+          // Redirect user to the protected page
+          res.redirect('app');
+        } else{
+          res.render('login', {
+            message: 'Invalid username or password',
+            messageClass: 'failure'
+        });
+        }
+      })
+      db.close((err) => helper.errorCatch(err));
+      });
+
+      // app.get('/', (req, res) => {
+      //   if logged in to go to /app
+      //   else, got to /login
+      // add   login button register
+      // });
 }
 
 module.exports = {
