@@ -19,7 +19,6 @@ function createRoutes(app){
 
 
     db.close((err) => helper.errorCatch(err));
-
   });
 
   app.get("/chat/:eventId", function (req, res) {
@@ -126,11 +125,22 @@ function createRoutes(app){
       db.close((err) => helper.errorCatch(err));
       });
 
-      // app.get('/', (req, res) => {
-      //   if logged in to go to /app
-      //   else, got to /login
-      // add   login button register
-      // });
+      app.get('/', (req, res) => {
+        if (req.userId){
+          var db = helper.openDB();
+          var query = `SELECT * FROM events`;
+          db.all(query, [], (err, rows) => {
+            if (err) {console.error(err)}
+            res.render("app", {events:rows})
+          });
+          db.close((err) => helper.errorCatch(err));
+        } else {
+          res.render('login', {
+            message: 'Please login to continue',
+            messageClass: 'failure'
+        });
+        }
+      });
 }
 
 module.exports = {
