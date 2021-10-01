@@ -8,17 +8,17 @@ var helper = require('./helpers.js');
 function createRoutes(app){
 
   app.get("/app", function (req, res) {
-    var db = helper.openDB();
-
-    var query = `SELECT *
-    FROM events`;
-    db.all(query, [], (err, rows) => {
-      if (err) {console.error(err)}
-      res.render("app", {events:rows})
-    });
-
-
-    db.close((err) => helper.errorCatch(err));
+    if (req.userId){
+      var db = helper.openDB();
+      var query = `SELECT * FROM events`;
+      db.all(query, [], (err, rows) => {
+        if (err) {console.error(err)}
+        res.render("app", {events:rows})
+      });
+      db.close((err) => helper.errorCatch(err));
+    } else {
+      res.redirect('index')
+    }
   });
 
   app.get("/chat/:eventId", function (req, res) {
@@ -127,18 +127,9 @@ function createRoutes(app){
 
       app.get('/', (req, res) => {
         if (req.userId){
-          var db = helper.openDB();
-          var query = `SELECT * FROM events`;
-          db.all(query, [], (err, rows) => {
-            if (err) {console.error(err)}
-            res.render("app", {events:rows})
-          });
-          db.close((err) => helper.errorCatch(err));
+          res.redirect('app');
         } else {
-          res.render('login', {
-            message: 'Please login to continue',
-            messageClass: 'failure'
-        });
+          res.render('index');
         }
       });
 }
