@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <% if (locals.message) { %>
+            <div class="<%= messageClass %>">
+                <%= message %>
+            </div>
+    <% } %>
+    <form method="POST" action="/register">
+                <div class="form-group">
+                    <label for="emailInput">Email address</label>
+                    <input name="email" type="email" class="form-control" id="emailInput">
+                </div>
+
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPasswordInput">Confirm Password</label>
+                    <input name="confirmPassword" type="password" class="form-control" id="confirmPasswordInput"
+                        placeholder="Re-enter your password here">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+  </body>
+</html>

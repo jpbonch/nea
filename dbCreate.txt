@@ -25,7 +25,7 @@ CREATE TABLE users (
     userId         INTEGER PRIMARY KEY
                            UNIQUE
                            NOT NULL,
-    displayName    TEXT    NOT NULL,
+    displayName    TEXT,
     email          TEXT    NOT NULL,
     profilePicture TEXT    NOT NULL,
     passwordHash   TEXT    NOT NULL

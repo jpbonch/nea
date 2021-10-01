@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <% if (locals.message) { %>
+            <div class="<%= messageClass %>">
+                <%= message %>
+            </div>
+    <% } %>
+    <form method="POST" action="/login">
+            <div class="form-group">
+                <label for="emailInput">Email address</label>
+                <input name="email" type="email" class="form-control" id="emailInput" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="passwordInput">Password</label>
+                <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+  </body>
+</html>

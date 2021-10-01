@@ -2,10 +2,13 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const { router } = require("./routes.js");
-const fetch = require("node-fetch");
-const fs = require("fs");
 var path = require ('path');
 const sqlite3 = require("sqlite3").verbose();
+const bodyParser = require("body-parser")
+// const cookieParser = require('cookie-parser');
+
+
+
 
 
 const app = express();
@@ -14,6 +17,9 @@ app.use(express.static("public"));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, "views"));
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cookieParser());
+
 
 router(app)
 

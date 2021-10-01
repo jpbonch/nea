@@ -7,20 +7,20 @@
     <link rel="stylesheet" href="/chat.css">
 </head>
 <body>
-    <nav>
-        <div id="selectEventDiv">
-            <button class="navbutton" id="nbaButton">NBA</button>
-            <button class="navbutton" id="mlbButton">MLB</button>
-            <button class="navbutton" id="nhlButton">NHL</button>
-            <button class="navbutton" id="nflButton">NFL</button>
-        </div>
+  <nav>
+      <div id="selectEventDiv">
+          <button class="navbutton" id="nbaButton">NBA</button>
+          <button class="navbutton" id="mlbButton">MLB</button>
+          <button class="navbutton" id="nhlButton">NHL</button>
+          <button class="navbutton" id="nflButton">NFL</button>
+      </div>
 
-        <div id="authbox">
-            <button id="signInButton" class="navbutton">Sign In</button>
-            <div id="separator"></div>
-            <button id="registerButton" class="navbutton">Register</button>
-        </div>
-    </nav>
+      <div id="authbox">
+          <button id="signInButton" onclick="window.location = '/login'" class="navbutton">Sign In</button>
+          <div id="separator"></div>
+          <button id="registerButton" onclick="window.location = '/register'" class="navbutton">Register</button>
+      </div>
+  </nav>
 
     <div id="chatArea">
     <div id="chatBox">

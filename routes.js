@@ -1,13 +1,26 @@
 const path = require("path");
 const fetch = require("node-fetch");
 const fs = require("fs");
-const sqlite3 = require("sqlite3").verbose();
 var helper = require('./helpers.js');
 
 
+
 function createRoutes(app){
+
   app.get("/", function (req, res) {
-    res.render("index")
+    var db = helper.openDB();
+
+    var query = `SELECT *
+    FROM events`;
+    db.all(query, [], (err, rows) => {
+      if (err) {console.error(err)}
+      console.log(rows)
+      res.render("index", {events:rows})
+    });
+
+
+    db.close((err) => helper.errorCatch(err));
+
   });
 
   app.get("/chat/:eventId", function (req, res) {
@@ -15,14 +28,7 @@ function createRoutes(app){
     // req.params.eventId
     // load nba/gameid databse
     // add all
-    let db = new sqlite3.Database(
-      `./database.db`, // can be nba,
-      sqlite3.OPEN_READWRITE,
-      (err) => {
-        if (err) {console.error(err.message);}
-      }
-    );
-
+    var db = helper.openDB();
     var query = `SELECT messages.content, messages.time, users.displayName
     FROM messages
     JOIN users ON messages.userId=users.userId
@@ -35,38 +41,62 @@ function createRoutes(app){
 
 
 
-    db.close((err) => {
-      if (err) {console.error(err.message)}
-    });
+    db.close((err) => helper.errorCatch(err));
 
   });
 
   app.post("/write", function (req, res) {
     var {userId, displayName, content, time, eventId} = req.body;
 
-    let db = new sqlite3.Database(
-      `./database.db`,
-      sqlite3.OPEN_READWRITE,
-      (err) => {
-        if (err) {
-          console.error(err.message);
-        }
-      }
-    );
+    let db = helper.openDB();
     db.run(`INSERT INTO "messages" VALUES (?, ?, ?, ?)`,
-    [userId, content, time, eventId],
-    function(err) {
-      if (err) {
-        console.error(err.message);
-      }
-      console.log(`A row has been inserted with rowid ${this.lastID}`);
-    });
+           [userId, content, time, eventId],
+           (err) => helper.errorCatch(err));
 
-    db.close((err) => {
-      if (err) {
-        console.error(err.message);
-      }
-    });
+    db.close((err) => helper.errorCatch(err));
+  });
+
+  app.get("/register", function (req, res) {
+    res.render("register")
+  });
+
+  app.post("/register", function (req, res) {
+    var { email, password, confirmPassword } = req.body;
+    console.log(req.body)
+    if (password == confirmPassword){
+      var db = helper.openDB();
+      // if user already exists
+      var query = `SELECT email FROM users WHERE email="${email}"`;
+      db.all(query, [], (err, rows) => {
+        if (err) {console.error(err)}
+        if (rows.length > 0){
+          res.render('register', {
+                message: 'User already registered.',
+                messageClass: 'failure'
+            });
+            return;
+        }
+        var hash = helper.hashPassword(password);
+        db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?)`,
+               [email, hash],
+               (err) => helper.errorCatch(err));
+
+        res.render('login', {
+              message: 'Registration Complete. Please login to continue.',
+              messageClass: 'success'
+        });
+      });
+      db.close((err) => helper.errorCatch(err));
+    } else {
+        res.render('register', {
+            message: 'Password does not match.',
+            messageClass: 'failure'
+        });
+    }
+  });
+
+  app.get('/login', (req, res) => {
+    res.render('login');
   });
 }
 
