@@ -17,7 +17,7 @@ function createRoutes(app){
       });
       db.close((err) => helper.errorCatch(err));
     } else {
-      res.redirect('index')
+      res.redirect('/')
     }
   });
 
@@ -57,39 +57,46 @@ function createRoutes(app){
     res.render("register")
   });
 
-  app.post("/register", function (req, res) {
+  app.post("/register", async function (req, res) {
     var { email, password, confirmPassword } = req.body;
-    if (password == confirmPassword){
-      var db = helper.openDB();
-      // if user already exists
-      var query = `SELECT email FROM users WHERE email="${email}"`;
-      db.all(query, [], (err, rows) => {
-        if (err) {console.error(err)}
-        if (rows.length > 0){
-          res.render('register', {
-                message: 'User already registered.',
-                messageClass: 'failure'
-            });
-            db.close((err) => helper.errorCatch(err));
-            return;
-        }
-        var hash = helper.hashPassword(password);
-        db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
-               [email, hash],
-               (err) => helper.errorCatch(err));
-
-        res.render('login', {
-              message: 'Registration Complete. Please login to continue.',
-              messageClass: 'success'
-        });
+    if (password != confirmPassword){
+      res.render('register', {
+          message: 'Password does not match.',
+          messageClass: 'failure'
       });
-      db.close((err) => helper.errorCatch(err));
-    } else {
-        res.render('register', {
-            message: 'Password does not match.',
-            messageClass: 'failure'
-        });
+      return;
     }
+
+      var db = await helper.openDB();
+      // if user already exists
+      var sql = `SELECT email FROM users WHERE email="${email}"`;
+      var result = await helper.queryDB(db, sql, []);
+      if(result.rows.length > 0){
+        res.render('register', {
+              message: 'User already registered.',
+              messageClass: 'failure'
+          });
+          db.close((err) => helper.errorCatch(err));
+          return;
+      }
+
+      var hash = helper.hashPassword(password);
+      await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
+             [email, hash],
+             (err) => helper.errorCatch(err));
+
+      var sql =`SELECT userId FROM users WHERE email="${email}" AND passwordHash="${hash}"`;
+      var result = await helper.queryDB(db, sql, []);
+      var userId = result.rows[0].userId;
+
+      var authToken = helper.genAuthToken();
+      await db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
+             (err) => helper.errorCatch(err));
+      res.cookie('AuthToken', authToken);
+      res.redirect('app');
+
+     db.close((err) => helper.errorCatch(err));
+
   });
 
   app.get('/login', (req, res) => {
@@ -107,13 +114,9 @@ function createRoutes(app){
         if (rows.length > 0){
           var userId = rows[0].userId;
           const authToken = helper.genAuthToken();
-          // Store authentication token
-          console.log(authToken, userId)
           db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
                  (err) => helper.errorCatch(err));
-          // Setting the auth token in cookies
           res.cookie('AuthToken', authToken);
-          // Redirect user to the protected page
           res.redirect('app');
         } else{
           res.render('login', {

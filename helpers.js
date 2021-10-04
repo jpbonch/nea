@@ -41,11 +41,23 @@ function genAuthToken(){
     return crypto.randomBytes(30).toString('hex');
 }
 
+function query(db, sql, params){
+  return new Promise(function (resolve, reject){
+    db.all(sql, params, function (error, rows){
+      if(error){
+        reject(error);
+      } else {
+        resolve({rows:rows})
+      }
+    })
+  })
+}
 
 module.exports = {
   formatDate: formatDate,
   openDB: openDB,
   errorCatch: errorCatch,
   hashPassword: hashPassword,
-  genAuthToken: genAuthToken
+  genAuthToken: genAuthToken,
+  queryDB: query
 }
