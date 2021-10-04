@@ -4,42 +4,34 @@ const fs = require("fs");
 var helper = require('./helpers.js');
 
 
-
 function createRoutes(app){
 
-  app.get("/app", function (req, res) {
+  app.get("/app", async function (req, res) {
     if (req.userId){
       var db = helper.openDB();
       var query = `SELECT * FROM events`;
-      db.all(query, [], (err, rows) => {
-        if (err) {console.error(err)}
-        res.render("app", {events:rows})
-      });
+      var result = await helper.queryDB(db, query, []);
+      res.render("app", {events:result.rows})
       db.close((err) => helper.errorCatch(err));
     } else {
       res.redirect('/')
     }
   });
 
-  app.get("/chat/:eventId", function (req, res) {
+  app.get("/chat/:eventId", async function (req, res) {
     // eventtpe= database, eventid = table
     // req.params.eventId
     // load nba/gameid databse
     // add all
-    var db = helper.openDB();
+    var db = await helper.openDB();
     var query = `SELECT messages.content, messages.time, users.displayName
     FROM messages
     JOIN users ON messages.userId=users.userId
     WHERE eventId = ${req.params.eventId}`;
-    db.all(query, [], (err, rows) => {
-      if (err) {console.error(err)}
-      res.render("chat", {messages:rows, helper:helper, eventId:req.params.eventId});
-    });
-
-
+    var result = await helper.queryDB(db, query, []);
+    res.render("chat", {messages:result.rows, helper:helper, eventId:req.params.eventId});
 
     db.close((err) => helper.errorCatch(err));
-
   });
 
   app.post("/write", function (req, res) {
@@ -79,7 +71,7 @@ function createRoutes(app){
           db.close((err) => helper.errorCatch(err));
           return;
       }
-
+// convert to async, profile page, top igth replace sign in with user
       var hash = helper.hashPassword(password);
       await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
              [email, hash],
@@ -103,28 +95,27 @@ function createRoutes(app){
     res.render('login');
   });
 
-  app.post('/login', (req, res) => {
+  app.post('/login', async (req, res) => {
       var { email, password } = req.body;
       var hash = helper.hashPassword(password);
 
-      var db = helper.openDB();
+      var db = await helper.openDB();
       var query = `SELECT userId FROM users WHERE email="${email}" AND passwordHash="${hash}"`;
-      db.all(query, [], (err, rows) => {
-        if (err) {console.error(err)}
-        if (rows.length > 0){
-          var userId = rows[0].userId;
-          const authToken = helper.genAuthToken();
-          db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
-                 (err) => helper.errorCatch(err));
-          res.cookie('AuthToken', authToken);
-          res.redirect('app');
-        } else{
-          res.render('login', {
-            message: 'Invalid username or password',
-            messageClass: 'failure'
-        });
-        }
-      })
+      var result = helper.queryDB(db, query, []);
+
+      if (result.rows.length > 0){
+        var userId = result.rows[0].userId;
+        const authToken = helper.genAuthToken();
+        db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
+               (err) => helper.errorCatch(err));
+        res.cookie('AuthToken', authToken);
+        res.redirect('app');
+      } else {
+        res.render('login', {
+          message: 'Invalid username or password',
+          messageClass: 'failure'
+      });
+      }
       db.close((err) => helper.errorCatch(err));
       });
 
