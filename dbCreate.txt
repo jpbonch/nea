@@ -29,7 +29,8 @@ CREATE TABLE users (
     email          TEXT    NOT NULL,
     profilePicture TEXT    NOT NULL,
     passwordHash   TEXT    NOT NULL,
-    authToken TEXT
+    authToken TEXT,
+    biography      TEXT
 );
 
 CREATE TABLE messages (

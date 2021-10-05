@@ -3,24 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title><%= displayName %></title>
-    <style>
-    #inputDisplayName{
-      outline: none;
-    }
-    </style>
   </head>
   <body>
     <input type="text" id="inputDisplayName" value="<%= displayName %>">
     <img src="<%= profilePicture %>" />
-    <input type="text" id="inputImageUrl" value="default.jpeg">
+    <input type="text" id="inputImageUrl" value="<%= profilePicture %>">
+    <input type="text" id="inputBiography" value="<%= biography %>"/>
     <button id="saveProfile">Save</button>
     <button id="logOut" onclick="window.location = '/logout';">Log Out</button>
+    <button id="deleteAccount" onclick="window.location = '/delete';">Delete Account</button>
   </body>
   <script>
   document.getElementById("saveProfile").addEventListener("click", () => {
     var newDisplayName = document.getElementById("inputDisplayName").value;
     var newImageUrl = document.getElementById("inputImageUrl").value;
-    var msg = {newDisplayName:newDisplayName, newImageUrl:newImageUrl};
+    var newBiography = document.getElementById("inputBiography").value;
+    var msg = {newDisplayName:newDisplayName, newImageUrl:newImageUrl, newBiography:newBiography};
     fetch(`/profile`, {
         method: "post",
         headers: {

@@ -79,17 +79,19 @@ function createRoutes(app){
           db.close((err) => helper.errorCatch(err));
           return;
       }
-// profile page editable
-// limits on displayName length, pfp size
-// sign out button on profile
 // maybe navbar in chat.html
-// if not logged in chat.html
 // restructure
+
+// delete account
+// forgot password
+// profile page not editable
+
+// limits on displayName length, pfp size, obscene filters
+// message when new profile saved
 // green border around username input not obscene
-//obscene filters
-// redirect frmo profile to app
+// frontend
       var hash = helper.hashPassword(password);
-      await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
+      await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL, NULL)`,
              [email, hash],
              (err) => helper.errorCatch(err));
 
@@ -106,6 +108,7 @@ function createRoutes(app){
              (err) => helper.errorCatch(err));
       res.cookie('AuthToken', authToken);
 
+      res.redirect("app")
 
      db.close((err) => helper.errorCatch(err));
 
@@ -121,7 +124,7 @@ function createRoutes(app){
 
       var db = await helper.openDB();
       var query = `SELECT userId FROM users WHERE email="${email}" AND passwordHash="${hash}"`;
-      var result = helper.queryDB(db, query, []);
+      var result = await helper.queryDB(db, query, []);
 
       if (result.rows.length > 0){
         var userId = result.rows[0].userId;
@@ -157,25 +160,23 @@ function createRoutes(app){
 
       app.get('/profile/:userId', async (req, res) => {
         // get profile pic and displayname from db
-        console.log(req.params)
-        console.log('lol')
         var db = await helper.openDB();
-        var sql = `SELECT displayName, profilePicture FROM users WHERE userId=${req.params.userId}`;
+        var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.params.userId}`;
         var result = await helper.queryDB(db, sql, []);
-        var {displayName, profilePicture} = result.rows[0];
+        var {displayName, profilePicture, biography} = result.rows[0];
         if (req.params.userId == req.userId){
-          res.render("editProfile", {displayName:displayName, profilePicture:profilePicture});
+          res.render("editProfile", {displayName:displayName, profilePicture:profilePicture, biography:biography});
         } else {
-          res.render("profile", {displayName:displayName, profilePicture:profilePicture});
+          res.render("profile", {displayName:displayName, profilePicture:profilePicture, biography:biography});
         }
 
       });
 
       app.post("/profile", async (req, res) => {
-        var {newDisplayName, newImageUrl} = req.body;
+        var {newDisplayName, newImageUrl, newBiography} = req.body;
 
         let db = helper.openDB();
-        db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}" WHERE userId=${req.userId}`, [],
+        db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}", biography="${newBiography}" WHERE userId=${req.userId}`, [],
                (err) => helper.errorCatch(err));
 
         db.close((err) => helper.errorCatch(err));
@@ -190,6 +191,15 @@ function createRoutes(app){
 
         res.redirect("/");
       });
+
+      app.get("/delete", async (req, res) => {
+        let db = helper.openDB();
+        db.run(`DELETE FROM "users" WHERE userId=${req.userId}`, [],
+               (err) => helper.errorCatch(err));
+        db.close((err) => helper.errorCatch(err));
+
+        res.redirect("/");
+      })
 
 }
 
