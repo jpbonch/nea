@@ -14,11 +14,9 @@ function createRoutes(app){
 
 
       var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
-      console.log(query)
       var result = await helper.queryDB(db, query, []);
       var {displayName, profilePicture} = result.rows[0];
-      console.log(result.rows)
-      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture})
+      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture, userId:req.userId})
       db.close((err) => helper.errorCatch(err));
     } else {
       res.redirect('/')
@@ -30,6 +28,7 @@ function createRoutes(app){
     // req.params.eventId
     // load nba/gameid databse
     // add all
+    if (req.userId){
     var db = await helper.openDB();
     var query = `SELECT messages.content, messages.time, users.displayName
     FROM messages
@@ -39,6 +38,9 @@ function createRoutes(app){
     res.render("chat", {messages:result.rows, helper:helper, eventId:req.params.eventId});
 
     db.close((err) => helper.errorCatch(err));
+  } else {
+    res.redirect('/')
+  }
   });
 
   app.post("/write", function (req, res) {
@@ -79,6 +81,11 @@ function createRoutes(app){
           return;
       }
 // redirect to profile page, top right replace sign in with user DEFAULTS
+// profile page editable
+// limits on displayName length, pfp size
+// sign out button on profile
+// maybe navbar in chat.html
+// if not logged in chat.html
       var hash = helper.hashPassword(password);
       await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
              [email, hash],
@@ -139,15 +146,20 @@ function createRoutes(app){
         }
       });
 
-      app.get('/profile', async (req, res) => {
+      app.get('/profile/:userId', async (req, res) => {
         // get profile pic and displayname from db
         var db = await helper.openDB();
-        var sql = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
+        var sql = `SELECT displayName, profilePicture FROM users WHERE userId=${req.params.userId}`;
         var result = await helper.queryDB(db, sql, []);
-        console.log(result)
         var {displayName, profilePicture} = result.rows[0];
-        res.render("profile", {displayName:displayName, profilePicture:profilePicture});
+        if (req.params.userId == req.userId){
+          res.render("editProfile", {displayName:displayName, profilePicture:profilePicture});
+        } else {
+          res.render("profile", {displayName:displayName, profilePicture:profilePicture});
+        }
+
       });
+
 }
 
 module.exports = {

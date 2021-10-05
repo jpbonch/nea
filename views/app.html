@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="navbar.css" />
-    <script src="loadEvents.js" defer></script>
 </head>
 <body>
     <nav>
@@ -19,12 +18,12 @@
         </div>
 
         <div id="authbox">
-            <button id="signInButton" onclick="window.location = '/login'" class="navbutton">Sign In</button>
-            <div id="separator"></div>
-            <button id="registerButton" onclick="window.location = '/register'" class="navbutton">Register</button>
+            <img id="profilePic" src="<%= profilePicture %>"/>
+            <span id="displayName" onclick="window.location = '/profile/' + <%= userId %>;"><%= displayName %></span>
+
         </div>
-        <%= displayName %>
-        <%= profilePicture %>
+
+
     </nav>
 
     <div id="container">

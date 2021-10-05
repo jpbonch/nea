@@ -49,10 +49,3 @@ nav{
 #signInButton, #registerButton{
     font-size: 15px;
 }
-
-#separator{
-    width: 1px;
-    height: 30px;
-    background-color: white;
-    display: inline-block;
-}
