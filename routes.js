@@ -10,8 +10,15 @@ function createRoutes(app){
     if (req.userId){
       var db = helper.openDB();
       var query = `SELECT * FROM events`;
+      var {rows} = await helper.queryDB(db, query, []);
+
+
+      var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
+      console.log(query)
       var result = await helper.queryDB(db, query, []);
-      res.render("app", {events:result.rows})
+      var {displayName, profilePicture} = result.rows[0];
+      console.log(result.rows)
+      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture})
       db.close((err) => helper.errorCatch(err));
     } else {
       res.redirect('/')
@@ -71,7 +78,7 @@ function createRoutes(app){
           db.close((err) => helper.errorCatch(err));
           return;
       }
-// convert to async, profile page, top igth replace sign in with user
+// redirect to profile page, top right replace sign in with user DEFAULTS
       var hash = helper.hashPassword(password);
       await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
              [email, hash],
@@ -82,10 +89,15 @@ function createRoutes(app){
       var userId = result.rows[0].userId;
 
       var authToken = helper.genAuthToken();
-      await db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
+      var defaultName = email.split('@')[0];
+      var defaultPicture = "default.jpeg";
+      await db.run(`UPDATE "users"
+      SET authToken="${authToken}", displayName="${defaultName}", profilePicture="${defaultPicture}"
+      WHERE userId=${userId}`, [],
              (err) => helper.errorCatch(err));
       res.cookie('AuthToken', authToken);
-      res.redirect('app');
+
+      res.redirect('profile');
 
      db.close((err) => helper.errorCatch(err));
 
@@ -125,6 +137,16 @@ function createRoutes(app){
         } else {
           res.render('index');
         }
+      });
+
+      app.get('/profile', async (req, res) => {
+        // get profile pic and displayname from db
+        var db = await helper.openDB();
+        var sql = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
+        var result = await helper.queryDB(db, sql, []);
+        console.log(result)
+        var {displayName, profilePicture} = result.rows[0];
+        res.render("profile", {displayName:displayName, profilePicture:profilePicture});
       });
 }
 
