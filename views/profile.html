@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <title><%= displayName %></title>
     <style>
-    
+    #inputDisplayName{
+      outline: none;
+    }
     </style>
   </head>
   <body>
-    <p><%= displayName %></p>
+    <input type="text" id="inputDisplayName"><%= displayName %></p>
     <img src="<%= profilePicture %>" />
   </body>
 </html>

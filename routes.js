@@ -1,6 +1,5 @@
 const path = require("path");
 const fetch = require("node-fetch");
-const fs = require("fs");
 var helper = require('./helpers.js');
 
 
@@ -16,7 +15,7 @@ function createRoutes(app){
       var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
       var result = await helper.queryDB(db, query, []);
       var {displayName, profilePicture} = result.rows[0];
-      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture, userId:req.userId})
+      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture})
       db.close((err) => helper.errorCatch(err));
     } else {
       res.redirect('/')
@@ -80,12 +79,15 @@ function createRoutes(app){
           db.close((err) => helper.errorCatch(err));
           return;
       }
-// redirect to profile page, top right replace sign in with user DEFAULTS
 // profile page editable
 // limits on displayName length, pfp size
 // sign out button on profile
 // maybe navbar in chat.html
 // if not logged in chat.html
+// restructure
+// green border around username input not obscene
+//obscene filters
+// redirect frmo profile to app
       var hash = helper.hashPassword(password);
       await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL)`,
              [email, hash],
@@ -97,14 +99,13 @@ function createRoutes(app){
 
       var authToken = helper.genAuthToken();
       var defaultName = email.split('@')[0];
-      var defaultPicture = "default.jpeg";
+      var defaultPicture = "/default.jpeg";
       await db.run(`UPDATE "users"
       SET authToken="${authToken}", displayName="${defaultName}", profilePicture="${defaultPicture}"
       WHERE userId=${userId}`, [],
              (err) => helper.errorCatch(err));
       res.cookie('AuthToken', authToken);
 
-      res.redirect('profile');
 
      db.close((err) => helper.errorCatch(err));
 
@@ -146,8 +147,18 @@ function createRoutes(app){
         }
       });
 
+      app.get('/profile', (req, res) => {
+        if (req.userId){
+          res.redirect('/profile/' + req.userId)
+        } else {
+          res.redirect('/')
+        }
+      });
+
       app.get('/profile/:userId', async (req, res) => {
         // get profile pic and displayname from db
+        console.log(req.params)
+        console.log('lol')
         var db = await helper.openDB();
         var sql = `SELECT displayName, profilePicture FROM users WHERE userId=${req.params.userId}`;
         var result = await helper.queryDB(db, sql, []);
@@ -158,6 +169,26 @@ function createRoutes(app){
           res.render("profile", {displayName:displayName, profilePicture:profilePicture});
         }
 
+      });
+
+      app.post("/profile", async (req, res) => {
+        var {newDisplayName, newImageUrl} = req.body;
+
+        let db = helper.openDB();
+        db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}" WHERE userId=${req.userId}`, [],
+               (err) => helper.errorCatch(err));
+
+        db.close((err) => helper.errorCatch(err));
+      });
+
+      app.get("/logout", async (req, res) => {
+        let db = helper.openDB();
+        db.run(`UPDATE "users" SET authToken=NULL WHERE userId=${req.userId}`, [],
+               (err) => helper.errorCatch(err));
+
+        db.close((err) => helper.errorCatch(err));
+
+        res.redirect("/");
       });
 
 }
