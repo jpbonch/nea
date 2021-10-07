@@ -1,5 +1,4 @@
 const path = require("path");
-const fetch = require("node-fetch");
 var helper = require('./helpers.js');
 
 
@@ -83,6 +82,7 @@ function createRoutes(app){
 // restructure
 
 // profile page not editable
+// api more sports, future events, past events
 
 // limits on displayName length, pfp size, obscene filters
 // message when new profile saved
@@ -95,7 +95,7 @@ function createRoutes(app){
       await db.run(`INSERT INTO "users" VALUES (NULL, ?, ?, ?, ?, ?, NULL)`,
              [defaultName, email, defaultPicture, hash, authToken],
              (err) => helper.errorCatch(err));
-             
+
       res.cookie('AuthToken', authToken);
 
       res.redirect("app")
