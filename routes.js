@@ -82,8 +82,6 @@ function createRoutes(app){
 // maybe navbar in chat.html
 // restructure
 
-// delete account
-// forgot password
 // profile page not editable
 
 // limits on displayName length, pfp size, obscene filters
@@ -91,21 +89,13 @@ function createRoutes(app){
 // green border around username input not obscene
 // frontend
       var hash = helper.hashPassword(password);
-      await db.run(`INSERT INTO "users" VALUES (NULL, NULL, ?, NULL, ?, NULL, NULL)`,
-             [email, hash],
-             (err) => helper.errorCatch(err));
-
-      var sql =`SELECT userId FROM users WHERE email="${email}" AND passwordHash="${hash}"`;
-      var result = await helper.queryDB(db, sql, []);
-      var userId = result.rows[0].userId;
-
-      var authToken = helper.genAuthToken();
       var defaultName = email.split('@')[0];
       var defaultPicture = "/default.jpeg";
-      await db.run(`UPDATE "users"
-      SET authToken="${authToken}", displayName="${defaultName}", profilePicture="${defaultPicture}"
-      WHERE userId=${userId}`, [],
+      var authToken = helper.genAuthToken();
+      await db.run(`INSERT INTO "users" VALUES (NULL, ?, ?, ?, ?, ?, NULL)`,
+             [defaultName, email, defaultPicture, hash, authToken],
              (err) => helper.errorCatch(err));
+             
       res.cookie('AuthToken', authToken);
 
       res.redirect("app")
