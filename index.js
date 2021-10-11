@@ -40,15 +40,11 @@ app.use((req, res, next) => {
 
 router(app)
 
-function updateEvents(data){
-  let db = new sqlite3.Database(
-    `./database.db`,
-    sqlite3.OPEN_READWRITE,
-    (err) => {
-      if (err) {console.error(err.message)}
-    });
+function updateEvents(sport, data){
 
-    for (game of data.games){
+    let db = helper.openDB();
+    if (sport == "nba"){
+    for (game of data.api.games){
     db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ["nba", game.startTimeUTC, game.statusGame, game.league, game.arena, game.city, game.country, game.currentPeriod,
     game.vTeam.shortName, game.vTeam.fullName, game.vTeam.logo, game.vTeam.score.points,
@@ -57,45 +53,53 @@ function updateEvents(data){
       console.log(`A row has been inserted with rowid ${this.lastID}`);
     });
   }
+}
+if (sport == "football"){
+  console.log(data)
+  for (game of data.response){
+    db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ["football", game.fixture.date, game.fixture.status.long, game.league.name, game.fixture.venue.name, game.fixture.venue.city, game.league.country, game.fixture.status.short,
+    game.teams.away.name, game.teams.away.name, game.teams.away.logo, game.goals.away,
+    game.teams.home.name, game.teams.home.name, game.teams.home.logo, game.goals.home],
+    function(err) {if (err) {console.error(err.message)}
+      console.log(`A row has been inserted with rowid ${this.lastID}`);
+    });
+  }
+}
 
-  db.close((err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    // CLOSED THE DATABASE CONNECTION
-  });
+
+  db.close((err) => helper.errorCatch(err));
 }
 
 
 var minutes = 10
 var interval = minutes * 60 * 1000;
-setInterval(function() {
+setInterval(async function() {
     var today = new Date()
-    today.setDate(today.getDate() + 31) //DELETE
+    today.setDate(today.getDate() + 5) //DELETE
     var todayString = today.toISOString().split('T')[0]
-    var endpoints = [{
-      url: "https://api-nba-v1.p.rapidapi.com/games/date/" + todayString,
-      options: {
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
-          "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt").slice(0, -1)
-        }
+
+    var options = {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "",
+        "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt").slice(0, -1)
       }
-    },
-    {
-      url: "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&date=" + todayString,
-      options: {
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-          "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt").slice(0, -1)
-        }
-      }
-    }];
+    };
+
+    var endpoints = [
+      {url: "https://api-nba-v1.p.rapidapi.com/games/date/" + todayString,
+       sport: "nba",
+       host: 'api-nba-v1.p.rapidapi.com'},
+      {url: "https://api-football-v1.p.rapidapi.com/v3/fixtures?date=" + todayString,
+       sport: "football",
+       host: "api-football-v1.p.rapidapi.com"}
+    ];
+
     for (endpoint of endpoints){
-    fetch(endpoint.url, endpoint.options).then((response) => response.json())
-    .then(jsonResult => updateEvents(jsonResult.api))
+      options.headers["x-rapidapi-host"] = endpoint.host;
+    fetch(endpoint.url, options).then((response) => response.json())
+    .then(jsonResult => updateEvents(endpoint.sport, jsonResult))
     .catch((error) => console.log(error));
   }
 }, interval);

@@ -18,7 +18,7 @@
 }
 
 body{
-    overflow: hidden;
+    overflow-x: hidden;
     width: 100%;
     font-family: 'Roboto', sans-serif;
     padding: 0;
