@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 router(app)
 
 async function updateEvents(sport, data){
-
+  console.log(data)
     let db = await helper.openDB();
     if (sport == "basketball"){
     for (game of data.response){
@@ -55,7 +55,7 @@ async function updateEvents(sport, data){
   }
   }
 if (sport == "football"){
-  console.log(data)
+  
   for (game of data.response){
     await db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ["football", game.fixture.date, game.fixture.status.long, game.league.name, game.fixture.venue.name, game.fixture.venue.city, game.league.country, game.fixture.status.short,
@@ -74,7 +74,7 @@ return;
 }
 
 
-var minutes = 10
+var minutes = 0.1
 var interval = minutes * 60 * 1000;
 setInterval(async function() {
     var today = new Date()
