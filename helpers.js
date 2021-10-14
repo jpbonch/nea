@@ -8,7 +8,7 @@ function formatDate(inputDateString){
   if(inputDate.toDateString() == todaysDate.toDateString()) {
     var time = inputDate.getHours() + ':' + inputDate.getMinutes();
   } else {
-    var time = message.time.split(' ')[0];
+    var time = inputDateString.split('T')[0];
   }
   return time;
 }

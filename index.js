@@ -40,24 +40,24 @@ app.use((req, res, next) => {
 
 router(app)
 
-function updateEvents(sport, data){
+async function updateEvents(sport, data){
 
-    let db = helper.openDB();
-    if (sport == "nba"){
-    for (game of data.api.games){
-    db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    ["nba", game.startTimeUTC, game.statusGame, game.league, game.arena, game.city, game.country, game.currentPeriod,
-    game.vTeam.shortName, game.vTeam.fullName, game.vTeam.logo, game.vTeam.score.points,
-    game.hTeam.shortName, game.hTeam.fullName, game.hTeam.logo, game.hTeam.score.points],
+    let db = await helper.openDB();
+    if (sport == "basketball"){
+    for (game of data.response){
+    await db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ["basketball", game.date, game.status.long, game.league.name, game.stage, game.city, game.country.name, game.status.short,
+    game.teams.away.name, game.teams.away.name, game.teams.away.logo, game.scores.away.total,
+    game.teams.home.name, game.teams.home.name, game.teams.home.logo, game.scores.home.total],
     function(err) {if (err) {console.error(err.message)}
       console.log(`A row has been inserted with rowid ${this.lastID}`);
     });
   }
-}
+  }
 if (sport == "football"){
   console.log(data)
   for (game of data.response){
-    db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    await db.run(`INSERT INTO "events" VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ["football", game.fixture.date, game.fixture.status.long, game.league.name, game.fixture.venue.name, game.fixture.venue.city, game.league.country, game.fixture.status.short,
     game.teams.away.name, game.teams.away.name, game.teams.away.logo, game.goals.away,
     game.teams.home.name, game.teams.home.name, game.teams.home.logo, game.goals.home],
@@ -65,10 +65,12 @@ if (sport == "football"){
       console.log(`A row has been inserted with rowid ${this.lastID}`);
     });
   }
+
 }
+await db.close((err) => helper.errorCatch(err));
+return;
 
 
-  db.close((err) => helper.errorCatch(err));
 }
 
 
@@ -76,7 +78,7 @@ var minutes = 10
 var interval = minutes * 60 * 1000;
 setInterval(async function() {
     var today = new Date()
-    today.setDate(today.getDate() + 5) //DELETE
+    // today.setDate(today.getDate() + 5) //DELETE
     var todayString = today.toISOString().split('T')[0]
 
     var options = {
@@ -88,18 +90,18 @@ setInterval(async function() {
     };
 
     var endpoints = [
-      {url: "https://api-nba-v1.p.rapidapi.com/games/date/" + todayString,
-       sport: "nba",
-       host: 'api-nba-v1.p.rapidapi.com'},
-      {url: "https://api-football-v1.p.rapidapi.com/v3/fixtures?date=" + todayString,
+      {url: "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&season=2021&date=" + todayString,
        sport: "football",
-       host: "api-football-v1.p.rapidapi.com"}
+       host: "api-football-v1.p.rapidapi.com"},
+       {url: "https://api-basketball.p.rapidapi.com/games?date=" + todayString,
+       sport: "basketball",
+       host: "api-basketball.p.rapidapi.com"}
     ];
 
     for (endpoint of endpoints){
       options.headers["x-rapidapi-host"] = endpoint.host;
     fetch(endpoint.url, options).then((response) => response.json())
-    .then(jsonResult => updateEvents(endpoint.sport, jsonResult))
+    .then(async jsonResult => {await updateEvents(endpoint.sport, jsonResult)})
     .catch((error) => console.log(error));
   }
 }, interval);

@@ -1,49 +1,104 @@
-.box {
-    background-color: rgb(62,54,64);
-    width: 300px;
-    height: 100px;
-    /* margin: 100px; */
-    border: 6px solid transparent;
-    border-image: linear-gradient(to right, orangered , orange);
-    border-image-slice: 1;
-    color: white;
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
-    margin: 30px
+#authbox{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  height: 50px;
+  display: inline-flex;
+  background-color: #1E1E1F;
+  color: white;
+  align-items: center;
+  justify-content: left;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 0px black
 }
 
-.box:hover{
-    cursor: pointer;
-}
-
-body{
-    overflow-x: hidden;
-    width: 100%;
-    font-family: 'Roboto', sans-serif;
-    padding: 0;
-    margin: 0;
-    background-color: #2A222C;
-
-}
-
-#container{
-    margin: auto;
-    width: 800px
+#authbox:hover{
+  cursor: pointer;
+  transition: background-color 0.1s;
+  background-color: #3a3b3c;
 }
 
 #profilePic{
-  width: 50px;
-  height: 50px;
-  border-radius: 25px
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  vertical-align: middle;
+  margin-right: 7px
 }
 
-#displayName{
-  color: rgba(255,255,255,0.9);
-  font-weight: bold;
+body{
+  font-family: 'Roboto', sans-serif;
+  background-color: #131312;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-#displayName:hover{
-    text-decoration: underline;
-    cursor: pointer;
+#selectEventDiv{
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  display: inline-flex;
+  background-color: #1E1E1F;
+  color: white;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 0px black;
+  font-size: 30px;
+  align-items: center;
+}
+
+
+#container{
+  display: flex;
+  align-items:center;
+  flex-direction: column;
+  margin: auto;
+  width: clamp(200px, 500px, 700px);
+  padding-top: 50px;
+}
+
+.navbutton{
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  height: 100%;
+  border-radius: 15px;
+  padding: 7px
+}
+
+.navbutton:hover{
+  transition: background-color 0.1s;
+  background-color: #3a3b3c;
+  cursor: pointer;
+}
+
+.box{
+  width: 100%;
+  border-radius: 15px;
+  background-color:#1E1E1F;
+  box-shadow: 0px 0px 10px 0px black;
+  font-size: 20px;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.box:hover{
+  background-color: #3a3b3c;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.separator{
+  width: 1px;
+  height: 20px;
+  background-color: gray;
+  margin-left: 5px;
+  margin-right: 5px;
 }

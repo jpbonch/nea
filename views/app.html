@@ -6,31 +6,34 @@
     <link rel="icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="navbar.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav>
         <div id="selectEventDiv">
-            <button class="navbutton" id="nbaButton">NBA</button>
-            <button class="navbutton" id="mlbButton">MLB</button>
-            <button class="navbutton" id="nhlButton">NHL</button>
-            <button class="navbutton" id="nflButton">NFL</button>
+            <button class="navbutton" id="mlbButton">Sports</button>
+            <div class="separator"></div>
+            <button class="navbutton" id="nhlButton">Leagues</button>
+            <div class="separator"></div>
+            <button class="navbutton" id="nflButton">Arenas</button>
+            <div class="separator"></div>
+            <button class="navbutton" id="nflButton">Cities</button>
         </div>
 
         <div id="authbox">
             <img id="profilePic" src="<%= profilePicture %>"/>
             <span id="displayName" onclick="window.location = '/profile';"><%= displayName %></span>
-
         </div>
-
-    </nav>
 
     <div id="container">
       <% for(event of events) { %>
             <div class="box" onclick="window.location = '/chat/' + <%= event.eventId %>">
-            <%= event.startTimeUTC + " " + event.vTeamFullName + " vs " + event.hTeamFullName %>
+            <%= helper.formatDate(event.startTimeUTC) + " " + event.vTeamFullName + " vs " + event.hTeamFullName %>
             </div>
       <% } %>
     </div>
+
 </body>
 </html>

@@ -14,7 +14,7 @@ function createRoutes(app){
       var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
       var result = await helper.queryDB(db, query, []);
       var {displayName, profilePicture} = result.rows[0];
-      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture})
+      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture, helper:helper})
       db.close((err) => helper.errorCatch(err));
     } else {
       res.redirect('/')
