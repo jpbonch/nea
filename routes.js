@@ -95,12 +95,13 @@ function createRoutes(app){
       await db.run(`INSERT INTO "users" VALUES (NULL, ?, ?, ?, ?, ?, NULL)`,
              [defaultName, email, defaultPicture, hash, authToken],
              (err) => helper.errorCatch(err));
+      db.close((err) => helper.errorCatch(err));
 
       res.cookie('AuthToken', authToken);
 
-      res.redirect("app")
+      res.redirect("profile")
 
-     db.close((err) => helper.errorCatch(err));
+
 
   });
 
