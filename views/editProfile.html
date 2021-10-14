@@ -3,15 +3,30 @@
   <head>
     <meta charset="utf-8">
     <title><%= displayName %></title>
+    <link rel="stylesheet" href="/editProfile.css" />
   </head>
   <body>
-    <input type="text" id="inputDisplayName" value="<%= displayName %>">
-    <img src="<%= profilePicture %>" />
-    <input type="text" id="inputImageUrl" value="<%= profilePicture %>">
-    <input type="text" id="inputBiography" value="<%= biography %>"/>
+    <div id="shade">
+    <div id="changeProfilePopup">
+        <input type="text" id="inputImageUrl" value="<%= profilePicture %>" placeholder="Image URL">
+        <span id="closePopupButton">X</span>
+      </div>
+  </div>
+
+    <div class="leftColumn">
+    <img src="<%= profilePicture %>" id="profilePicture"/>
+    <button id="deleteAccount" onclick="window.location = '/delete';">Delete Account</button>
+    <button>Change Password</button>
+  </div>
+
+    <div class="rightColumn">
+    <input type="text" id="inputDisplayName" value="<%= displayName %>" placeholder="Display name">
+    <input type="text" id="inputBiography" value="<%= biography %>" placeholder="Biography"/>
+
+
     <button id="saveProfile">Save</button>
     <button id="logOut" onclick="window.location = '/logout';">Log Out</button>
-    <button id="deleteAccount" onclick="window.location = '/delete';">Delete Account</button>
+  </div>
   </body>
   <script>
   document.getElementById("saveProfile").addEventListener("click", () => {
@@ -27,6 +42,17 @@
         },
         body: JSON.stringify(msg)
         });
+  });
+  </script>
+
+  <script>
+  document.getElementById("profilePicture").addEventListener("click", () => {
+    document.getElementById("shade").style.display = "block";
+  });
+
+  document.getElementById("closePopupButton")
+  .addEventListener("click", () => {
+    document.getElementById("shade").style.display = "none";
   });
   </script>
 </html>
