@@ -95,10 +95,25 @@ body{
   transition: background-color 0.1s;
 }
 
-.separator{
-  width: 1px;
-  height: 20px;
-  background-color: gray;
-  margin-left: 5px;
-  margin-right: 5px;
+#searchBar{
+  width: 300px;
+  height: 50px;
+  background-color: transparent;
+  color: lightgray;
+  outline: none;
+  border: none;
+  font-size: 25px;
+}
+
+#searchSelect{
+  height: 50px;
+  border-radius: 15px;
+  background-color: #3a3b3c;
+  border: none;
+  outline: none;
+  color: lightgray;
+}
+
+#searchSelect:hover{
+  cursor: pointer;
 }

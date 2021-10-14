@@ -13,18 +13,20 @@
 </head>
 <body>
         <div id="selectEventDiv">
-            <button class="navbutton" id="mlbButton">Sports</button>
-            <div class="separator"></div>
-            <button class="navbutton" id="nhlButton">Leagues</button>
-            <div class="separator"></div>
-            <button class="navbutton" id="nflButton">Arenas</button>
-            <div class="separator"></div>
-            <button class="navbutton" id="nflButton">Cities</button>
+            <select id="searchSelect">
+              <option>Team</option>
+              <option>Sport</option>
+              <option>League</option>
+              <option>Arena</option>
+              <option>City</option>
+            </select>
+
+            <input type="text" id="searchBar" placeholder="Search"/>
         </div>
 
-        <div id="authbox">
+        <div id="authbox" onclick="window.location = '/profile';">
             <img id="profilePic" src="<%= profilePicture %>"/>
-            <span id="displayName" onclick="window.location = '/profile';"><%= displayName %></span>
+            <span id="displayName"><%= displayName %></span>
         </div>
 
     <div id="container">

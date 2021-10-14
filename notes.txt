@@ -29,3 +29,5 @@ one table for storing messages, normalisation & structure
 model-view-controller
 
 how many days ahead request games?
+
+database opened as late as possible and closed as early as possible
