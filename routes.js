@@ -87,6 +87,7 @@ function createRoutes(app){
 // limits on displayName length, pfp size, obscene filters
 // message when new profile saved
 // green border around username input not obscene
+// email address verification
 // frontend
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];

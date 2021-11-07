@@ -7,8 +7,8 @@ const sqlite3 = require("sqlite3").verbose();
 const bodyParser = require("body-parser")
 const cookieParser = require('cookie-parser');
 var helper = require('./helpers.js');
-const fs = require("fs");
 const fetch = require("node-fetch");
+require('dotenv').config()
 
 
 
@@ -85,7 +85,7 @@ setInterval(async function() {
       method: "GET",
       headers: {
         "x-rapidapi-host": "",
-        "x-rapidapi-key": fs.readFileSync("keys/rapidapi-key.txt").slice(0, -1)
+        "x-rapidapi-key": process.env.API_KEY
       }
     };
 
@@ -100,6 +100,7 @@ setInterval(async function() {
 
     for (endpoint of endpoints){
       options.headers["x-rapidapi-host"] = endpoint.host;
+      console.log(options)
     fetch(endpoint.url, options).then((response) => response.json())
     .then(async jsonResult => {await updateEvents(endpoint.sport, jsonResult)})
     .catch((error) => console.log(error));
