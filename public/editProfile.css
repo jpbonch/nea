@@ -2,6 +2,8 @@ body{
   overflow-x: hidden;
   background-color: #131312;
   width: 100%;
+  font-family: 'Roboto', sans-serif;
+  color: white;
 }
 
 #shade{
@@ -49,16 +51,16 @@ body{
 
 button{
   display: block;
-  font-size: 25px;
+  font-size: 18px;
   background-color: #3a3b3c;
   outline: none;
   color: white;
-  border-radius: 15px;
-  font-size: 25px;
+  border-radius: 10px;
   padding: 10px;
   box-shadow: 0px 0px 10px 0px black;
   border: 0;
   margin-top: 10px;
+  width: 65%;
 }
 
 button:hover{
@@ -76,7 +78,7 @@ input, textarea{
   box-shadow: 0px 0px 10px 0px black;
   border: 0;
   margin-top: 10px;
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
 }
 
 .container{
@@ -85,11 +87,17 @@ input, textarea{
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  justify-content:center;
+  margin-top: 80px;
 }
 
 #profilePicture{
   border-radius: 50%;
-  width: 80%;
+  width: 100%
+}
+
+#profilePicture:hover{
+  cursor: pointer;
 }
 
 #saveProfile{
@@ -97,13 +105,46 @@ input, textarea{
   margin-left:auto;
   margin-right: auto;
 }
-.leftColumn button{
-  width: 90%;
-}
-
 #inputDisplayName{
-  width: 300px
+  width: 300px;
+  margin-top: 3px
 }
 #inputBiography{
-  height: 30%
+  height: 30%;
+  margin-top: 3px
+}
+
+.label{
+  font-size: 20px;
+  z-index: 10;
+  color: gray;
+  margin-left: 10px;
+}
+
+.pencilCircle{
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.pencilCircle:hover{
+  cursor: pointer
+}
+
+.profilePictureContainer{
+  width: 80%;
+  position: relative;
+}
+
+.pencil{
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 50%;
+  left:50%;
+  transform: translate(-50%, -50%);
 }

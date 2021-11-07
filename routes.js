@@ -41,11 +41,11 @@ function createRoutes(app){
   }
   });
 
-  app.post("/write", function (req, res) {
+  app.post("/write", async function (req, res) {
     var {userId, displayName, content, time, eventId} = req.body;
 
     let db = helper.openDB();
-    db.run(`INSERT INTO "messages" VALUES (?, ?, ?, ?)`,
+    await db.run(`INSERT INTO "messages" VALUES (?, ?, ?, ?)`,
            [userId, content, time, eventId],
            (err) => helper.errorCatch(err));
 
@@ -120,7 +120,7 @@ function createRoutes(app){
       if (result.rows.length > 0){
         var userId = result.rows[0].userId;
         const authToken = helper.genAuthToken();
-        db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
+        await db.run(`UPDATE "users" SET authToken="${authToken}" WHERE userId=${userId}`, [],
                (err) => helper.errorCatch(err));
         res.cookie('AuthToken', authToken);
         res.redirect('app');
@@ -164,10 +164,11 @@ function createRoutes(app){
       });
 
       app.post("/profile", async (req, res) => {
+        console.log(req.body)
         var {newDisplayName, newImageUrl, newBiography} = req.body;
 
         let db = helper.openDB();
-        db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}", biography="${newBiography}" WHERE userId=${req.userId}`, [],
+        await db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}", biography="${newBiography}" WHERE userId=${req.userId}`, [],
                (err) => helper.errorCatch(err));
 
         db.close((err) => helper.errorCatch(err));
@@ -175,7 +176,7 @@ function createRoutes(app){
 
       app.get("/logout", async (req, res) => {
         let db = helper.openDB();
-        db.run(`UPDATE "users" SET authToken=NULL WHERE userId=${req.userId}`, [],
+        await db.run(`UPDATE "users" SET authToken=NULL WHERE userId=${req.userId}`, [],
                (err) => helper.errorCatch(err));
 
         db.close((err) => helper.errorCatch(err));
@@ -185,7 +186,7 @@ function createRoutes(app){
 
       app.get("/delete", async (req, res) => {
         let db = helper.openDB();
-        db.run(`DELETE FROM "users" WHERE userId=${req.userId}`, [],
+        await db.run(`DELETE FROM "users" WHERE userId=${req.userId}`, [],
                (err) => helper.errorCatch(err));
         db.close((err) => helper.errorCatch(err));
 
