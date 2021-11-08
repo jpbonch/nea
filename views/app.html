@@ -30,7 +30,7 @@
 
         <% if (locals.loggedIn) { %>
           <div id="authbox" onclick="window.location = '/profile';">
-              <img id="profilePic" src="/images<%= profilePicture %>"/>
+              <img id="profilePic" src="<%= profilePicture %>"/>
               <span id="displayName"><%= displayName %></span>
           </div>
           <% } else { %>
@@ -43,7 +43,7 @@
       <% for(event of events) { %>
             <div class="box" onclick="window.location = '/chat/' + <%= event.eventId %>">
             <span class="versus"><%= event.vTeamFullName + " vs " + event.hTeamFullName %></span>
-              
+
             <div class="logoBox">
               <img class="logo" src="<%= event.vTeamLogo %>">
               <img class="logo" src="<%= event.hTeamLogo %>">

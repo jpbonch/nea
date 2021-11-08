@@ -31,7 +31,7 @@ function createRoutes(app){
     JOIN users ON messages.userId=users.userId
     WHERE eventId = ${req.params.eventId}`;
     var {rows} = await helper.queryDB(db, query, []);
-    
+
     var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.userId}`;
     var result = await helper.queryDB(db, sql, []);
     var {displayName: displayName, profilePicture: profilePicture, biography: biography} = result.rows[0];
@@ -95,9 +95,10 @@ function createRoutes(app){
 // fix date formatting
 //fix order of messages
 // profile pictures on messages (need to change db)
+// make search actually work
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
-      var defaultPicture = "/default.jpeg";
+      var defaultPicture = "/images/default.jpeg";
       var authToken = helper.genAuthToken();
       await db.run(`INSERT INTO "users" VALUES (NULL, ?, ?, ?, ?, ?, NULL)`,
              [defaultName, email, defaultPicture, hash, authToken],
@@ -159,7 +160,7 @@ function createRoutes(app){
         var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.params.userId}`;
         var result = await helper.queryDB(db, sql, []);
         var {displayName, profilePicture, biography} = result.rows[0];
-        
+
         if (req.userId == undefined){
           res.render("profile", {loggedIn: false, displayName:displayName, profilePicture:profilePicture, biography:biography});
           return;
@@ -172,7 +173,7 @@ function createRoutes(app){
           res.render("profile", {loggedIn: true, displayName:displayName, profilePicture:profilePicture, biography:biography, myBiography:myBiography, myDisplayName:myDisplayName, myProfilePicture:myProfilePicture})
         }
 
-        
+
 
         db.close((err) => helper.errorCatch(err));
 
