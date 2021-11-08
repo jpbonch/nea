@@ -81,6 +81,17 @@
         position: relative;
         left: -30px;
       }
+
+      #forgotPassword{
+        margin-top: 11px;
+        color: orangered;
+        float: right;
+      }
+
+      #forgotPassword:hover{
+        cursor: pointer;
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -104,6 +115,7 @@
                 <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password">
             </div>
             <button type="submit" id="loginButton" class="btn btn-primary">Login</button>
+            <a id="forgotPassword">Forgot password?</a>
         </form>
 
   <script>

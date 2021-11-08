@@ -78,18 +78,16 @@ function createRoutes(app){
           db.close((err) => helper.errorCatch(err));
           return;
       }
-// maybe navbar in chat.html
 // restructure
 
-// profile page not editable
 // api more sports, future events, past events
-
+// change password
 // limits on displayName length, pfp size, obscene filters
 // message when new profile saved
 // green border around username input not obscene
 // email address verification
 // frontend
-//forgot password
+//forgot password on login
 //make separate stylesheets
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
