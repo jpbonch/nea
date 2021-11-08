@@ -74,7 +74,7 @@ return;
 }
 
 
-var minutes = 10
+var minutes = 15
 var interval = minutes * 60 * 1000;
 setInterval(async function() {
     var today = new Date()

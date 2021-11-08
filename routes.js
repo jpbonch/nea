@@ -137,11 +137,7 @@ function createRoutes(app){
       });
 
       app.get('/', (req, res) => {
-        if (req.userId){
-          res.redirect('app');
-        } else {
-          res.render('index');
-        }
+          res.render('index', {loggedIn: req.userId != undefined});
       });
 
       app.get('/profile', (req, res) => {

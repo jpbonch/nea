@@ -22,12 +22,12 @@
     to   { opacity: 1; }
 }
 
-      #signInButton{
+      .normalButton{
         background-color: transparent;
         border: 2px solid white;
       }
 
-      #registerButton{
+      .orangeButton{
         background-color: orangered;
         border: 2px solid orangered
       }
@@ -92,11 +92,17 @@
       }
     </style>
   </head>
-  <body onload="document.body.style.opacity='1'"y>
+  <body>
     <h1>NEA Project</h1>
     <h2>Chat with other sports fans during games, matches or races.</h2>
-    <button id="registerButton" onclick="window.location = '/register'" class="navbutton">Register</button>
-    <button id="signInButton" onclick="window.location = '/login'" class="navbutton">Sign In</button>
+    <% if(loggedIn){ %>
+      <button class="orangeButton" onclick="window.location = '/app'">Go To App</button>
+      <button class="normalButton" onclick="window.location = '/logout'" >Log Out</button>
+    <% } else{ %>  
+      <button class="orangeButton" onclick="window.location = '/register'">Register</button>
+      <button class="normalButton" onclick="window.location = '/login'" >Sign In</button>
+   <% } %>
+    
     <div id="circle">
       <img id="basketball" src="images/basketball.png" />
       <img id="football" src="images/football.png" />
