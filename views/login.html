@@ -3,9 +3,88 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+    <style>
+      .failure{
+        width: 100px;
+        height: 50px;
+        background-color: red;
+      }
+
+      body{
+        font-family: 'Roboto', sans-serif;
+        background-color: #131312;
+        max-width: 500px;
+        margin: auto;
+        animation: fadein 1s;
+        color: white;
+        margin-top: 7vh;
+      }
+
+      @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+      #loginButton{
+        background-color: orangered;
+        border: 2px solid orangered
+      }
+
+
+      button{
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        color: white;
+        border-radius: 5px;
+      }
+
+      input{
+        width: 100%;
+        height: 35px;
+        border-radius: 7px;
+        margin-bottom: 15px;
+        margin-top: 5px;
+        border: 0;
+        outline: 0;
+        padding: 3px;
+        padding-left: 12px;
+        font-size: 17px;
+      }
+
+      input:focus{
+        outline: 2px solid orangered;
+      }
+
+      h1{
+        display: inline-block;
+      }
+
+      #close{
+        font-size: 30px;
+      }
+
+      #close:hover{
+        cursor: pointer;
+      }
+
+      .header{
+        max-width: 500px;
+        position: relative;
+        left: -30px;
+      }
+    </style>
   </head>
   <body>
+    <div class="header">
+      <span id="close">🠔</span>
+    <h1>Sign In</h1>
+    
+  </div>
     <% if (locals.message) { %>
             <div class="<%= messageClass %>">
                 <%= message %>
@@ -20,7 +99,13 @@
                 <label for="passwordInput">Password</label>
                 <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password">
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" id="loginButton" class="btn btn-primary">Login</button>
         </form>
+
+  <script>
+    document.getElementById("close").addEventListener("click", () => {
+      window.location = "/"
+    })
+  </script>
   </body>
 </html>

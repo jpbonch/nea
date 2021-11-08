@@ -89,6 +89,8 @@ function createRoutes(app){
 // green border around username input not obscene
 // email address verification
 // frontend
+//forgot password
+//make separate stylesheets
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
       var defaultPicture = "/default.jpeg";
