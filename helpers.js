@@ -6,7 +6,7 @@ function formatDate(inputDateString){
   var inputDate = new Date(inputDateString);
   var todaysDate = new Date();
   if(inputDate.toDateString() == todaysDate.toDateString()) {
-    var time = inputDate.getHours() + ':' + inputDate.getMinutes();
+    var time = ("0" + inputDate.getHours()).slice(-2) + ':' + ("0" + inputDate.getMinutes()).slice(-2);
   } else {
     var time = inputDateString.split('T')[0];
   }

@@ -12,7 +12,8 @@ function createRoutes(app){
       var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
       var result = await helper.queryDB(db, query, []);
       var {displayName, profilePicture} = result.rows[0];
-      res.render("app", {loggedIn:true, events:rows, displayName:displayName, profilePicture:profilePicture, helper:helper})
+      res.render("app", {loggedIn:true, events:rows, displayName:displayName,
+                         profilePicture:profilePicture, helper:helper})
     } else {
       res.render("app", {loggedIn: false, events:rows, helper:helper})
     }
@@ -91,11 +92,9 @@ function createRoutes(app){
 // frontend
 //forgot password on login
 //make separate stylesheets
-// fix date formatting
-//fix order of messages
 // profile pictures on messages (need to change db)
 // make search actually work
-// add links to chat messages
+// remove old events
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
       var defaultPicture = "/images/default.jpeg";

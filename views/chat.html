@@ -30,7 +30,7 @@
 
     <div id="chatArea">
     <div id="chatBox">
-      <% for(message of messages) { %>
+      <% for(message of messages.reverse()) { %>
             <div class="messageDiv">
             <span class="displayName" onclick="window.location = '/profile/<%= message.userId %>';"><%= message.displayName %></span>
             <span class="content"><%= message.content %></span>
