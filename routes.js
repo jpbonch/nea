@@ -26,7 +26,7 @@ function createRoutes(app){
     // add all
     if (req.userId){
     var db = await helper.openDB();
-    var query = `SELECT messages.content, messages.time, users.displayName
+    var query = `SELECT messages.content, messages.time, users.displayName, messages.userId
     FROM messages
     JOIN users ON messages.userId=users.userId
     WHERE eventId = ${req.params.eventId}`;
@@ -35,7 +35,6 @@ function createRoutes(app){
     var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.userId}`;
     var result = await helper.queryDB(db, sql, []);
     var {displayName: displayName, profilePicture: profilePicture, biography: biography} = result.rows[0];
-
     res.render("chat", {userId:req.userId, messages:rows, helper:helper, eventId:req.params.eventId, displayName:displayName, profilePicture:profilePicture});
 
     db.close((err) => helper.errorCatch(err));
@@ -96,6 +95,7 @@ function createRoutes(app){
 //fix order of messages
 // profile pictures on messages (need to change db)
 // make search actually work
+// add links to chat messages
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
       var defaultPicture = "/images/default.jpeg";

@@ -70,6 +70,8 @@
 
       #close{
         font-size: 30px;
+        position: relative;
+        bottom: -5px;
       }
 
       #close:hover{
@@ -77,9 +79,9 @@
       }
 
       .header{
-        max-width: 500px;
-        position: relative;
-        left: -30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       #forgotPassword{
@@ -96,9 +98,10 @@
   </head>
   <body>
     <div class="header">
-      <span id="close">🠔</span>
+
     <h1>Sign In</h1>
-    
+    <span id="close">X</span>
+  </div>
   </div>
     <% if (locals.message) { %>
             <div class="<%= messageClass %>">

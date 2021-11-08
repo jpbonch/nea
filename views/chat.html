@@ -32,7 +32,7 @@
     <div id="chatBox">
       <% for(message of messages) { %>
             <div class="messageDiv">
-            <span class="displayName"><%= message.displayName %></span>
+            <span class="displayName" onclick="window.location = '/profile/<%= message.userId %>';"><%= message.displayName %></span>
             <span class="content"><%= message.content %></span>
             <span class="time"><%= helper.formatDate(message.time) %></span>
             </div>
@@ -84,7 +84,7 @@
       var time = formatDate(msg.time);
       // var time = formatDate(msg.time)
       messageBox.innerHTML = `<div class='messageDiv'>
-      <span class="displayName">${msg.displayName}</span>
+      <span class="displayName" onclick="window.location = '/profile/${msg.userId}';">${msg.displayName}</span>
       <span class="content">${msg.content}</span>
       <span class="time">${time}</span>
       </div>` + messageBox.innerHTML;

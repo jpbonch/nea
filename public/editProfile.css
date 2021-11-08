@@ -93,7 +93,9 @@ input, textarea{
 
 #profilePicture{
   border-radius: 50%;
-  width: 100%
+    width: 216px;
+    height: 216px;
+
 }
 
 #profilePicture:hover{
