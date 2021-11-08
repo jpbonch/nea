@@ -20,19 +20,26 @@
     </div>
   </div>
 
-  <nav>
-    <div id="selectEventDiv">
-        <select id="searchSelect">
-          <option>Team</option>
-          <option>Sport</option>
-          <option>League</option>
-          <option>Arena</option>
-          <option>City</option>
-        </select>
+    <nav>
+      <img id="home" src="/images/home.png" />
 
-        <input type="text" id="searchBar" placeholder="Search"/>
-    </div>
-  </nav>
+  <div id="selectEventDiv">
+    <select id="searchSelect">
+      <option>Team</option>
+      <option>Sport</option>
+      <option>League</option>
+      <option>Arena</option>
+      <option>City</option>
+    </select>
+
+    <input type="text" id="searchBar" placeholder="Search"/>
+</div>
+
+<div id="authbox" onclick="window.location = '/profile';">
+    <img id="profilePic" src="/images<%= profilePicture %>"/>
+    <span id="displayName"><%= displayName %></span>
+</div>
+</nav>
 
   <div class="container">
     <div class="leftColumn">
@@ -89,6 +96,12 @@
     .addEventListener("click", () => {
       document.getElementById("shade").style.display = "none";
     });
+</script>
+
+<script>
+  document.getElementById("home").addEventListener("click", () => {
+    window.location = "/app";
+  })
 </script>
 
 </html>

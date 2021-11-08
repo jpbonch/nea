@@ -1,34 +1,4 @@
-#authbox{
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  height: 50px;
-  display: inline-flex;
-  background-color: #1E1E1F;
-  color: white;
-  align-items: center;
-  justify-content: left;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px 0px black
-}
 
-#authbox:hover{
-  cursor: pointer;
-  transition: background-color 0.1s;
-  background-color: #3a3b3c;
-}
-
-#profilePic{
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  vertical-align: middle;
-  margin-right: 7px
-}
 
 body{
   font-family: 'Roboto', sans-serif;
@@ -43,44 +13,14 @@ from { opacity: 0; }
 to   { opacity: 1; }
 }
 
-#selectEventDiv{
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, 0%);
-  display: inline-flex;
-  background-color: #1E1E1F;
-  color: white;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px 0px black;
-  font-size: 30px;
-  align-items: center;
-}
-
 
 #container{
+  padding-top: 100px;
   display: flex;
   align-items:center;
   flex-direction: column;
   margin: auto;
   width: clamp(200px, 700px, 900px);
-  padding-top: 50px;
-}
-
-.navbutton{
-  background-color: transparent;
-  outline: none;
-  border: none;
-  color: white;
-  font-size: 20px;
-  height: 100%;
-  border-radius: 15px;
-  padding: 7px
-}
-
-.navbutton:hover{
-  transition: background-color 0.1s;
-  background-color: #3a3b3c;
-  cursor: pointer;
 }
 
 .box{
@@ -101,25 +41,3 @@ to   { opacity: 1; }
   transition: background-color 0.1s;
 }
 
-#searchBar{
-  width: 300px;
-  height: 50px;
-  background-color: transparent;
-  color: lightgray;
-  outline: none;
-  border: none;
-  font-size: 25px;
-}
-
-#searchSelect{
-  height: 50px;
-  border-radius: 15px;
-  background-color: #3a3b3c;
-  border: none;
-  outline: none;
-  color: lightgray;
-}
-
-#searchSelect:hover{
-  cursor: pointer;
-}

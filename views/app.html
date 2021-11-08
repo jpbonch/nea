@@ -6,12 +6,16 @@
     <link rel="icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="/navbar.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <nav>
+        <img id="home" src="/images/home.png" />
+
         <div id="selectEventDiv">
             <select id="searchSelect">
               <option>Team</option>
@@ -28,6 +32,7 @@
             <img id="profilePic" src="/images<%= profilePicture %>"/>
             <span id="displayName"><%= displayName %></span>
         </div>
+      </nav>
 
     <div id="container">
       <% for(event of events) { %>
@@ -36,6 +41,10 @@
             </div>
       <% } %>
     </div>
-
+    <script>
+      document.getElementById("home").addEventListener("click", () => {
+        window.location = "/app";
+      })
+    </script>
 </body>
 </html>
