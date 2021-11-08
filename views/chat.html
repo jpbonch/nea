@@ -7,6 +7,26 @@
     <link rel="stylesheet" href="/chat.css">
 </head>
 <body>
+  <nav>
+    <img id="home" src="/images/home.png" onclick="window.location = '/app';"/>
+
+    <div id="selectEventDiv">
+        <select id="searchSelect">
+          <option>Team</option>
+          <option>Sport</option>
+          <option>League</option>
+          <option>Arena</option>
+          <option>City</option>
+        </select>
+
+        <input type="text" id="searchBar" placeholder="Search"/>
+    </div>
+
+      <div id="authbox" onclick="window.location = '/profile';">
+          <img id="profilePic" src="/images<%= profilePicture %>"/>
+          <span id="displayName"><%= displayName %></span>
+      </div>
+  </nav>
 
     <div id="chatArea">
     <div id="chatBox">
@@ -38,7 +58,7 @@
       e.preventDefault();
       if (messageInput.value) {
         // get uuser id and displayname from session
-        let msg = {userId: 1, displayName:"Lol", content: messageInput.value, time: getCurrentDate(), eventId:"<%= eventId %>"}
+        let msg = {userId: <%= userId %>, displayName:"<%= displayName %>", content: messageInput.value, time: getCurrentDate(), eventId:"<%= eventId %>"}
         socket.emit('chat message', msg);
         messageInput.value = '';
 
@@ -53,7 +73,7 @@
       }
     });
 
-    messageInput.addEventListener("keyup", function(event) {
+    messageInput.addEventListener("keydown", function(event) {
   if (event.keyCode === 13) {
     submitButton.click();
   }

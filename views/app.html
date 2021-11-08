@@ -14,7 +14,7 @@
 </head>
 <body>
     <nav>
-        <img id="home" src="/images/home.png" />
+        <img id="home" src="/images/home.png" onclick="window.location = '/app';"/>
 
         <div id="selectEventDiv">
             <select id="searchSelect">
@@ -57,10 +57,5 @@
             </div>
       <% } %>
     </div>
-    <script>
-      document.getElementById("home").addEventListener("click", () => {
-        window.location = "/app";
-      })
-    </script>
 </body>
 </html>

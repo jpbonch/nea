@@ -30,8 +30,13 @@ function createRoutes(app){
     FROM messages
     JOIN users ON messages.userId=users.userId
     WHERE eventId = ${req.params.eventId}`;
-    var result = await helper.queryDB(db, query, []);
-    res.render("chat", {messages:result.rows, helper:helper, eventId:req.params.eventId});
+    var {rows} = await helper.queryDB(db, query, []);
+    
+    var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.userId}`;
+    var result = await helper.queryDB(db, sql, []);
+    var {displayName: displayName, profilePicture: profilePicture, biography: biography} = result.rows[0];
+
+    res.render("chat", {userId:req.userId, messages:rows, helper:helper, eventId:req.params.eventId, displayName:displayName, profilePicture:profilePicture});
 
     db.close((err) => helper.errorCatch(err));
   } else {
@@ -87,6 +92,9 @@ function createRoutes(app){
 // frontend
 //forgot password on login
 //make separate stylesheets
+// fix date formatting
+//fix order of messages
+// profile pictures on messages (need to change db)
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
       var defaultPicture = "/default.jpeg";
