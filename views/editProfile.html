@@ -67,7 +67,7 @@
   </div>
 </body>
 <script>
-  document.getElementById("saveProfile").addEventListener("click", () => {
+  document.getElementById("saveProfile").addEventListener("click", async () => {
     var newDisplayName = document.getElementById("inputDisplayName").value;
     var newImageUrl = document.getElementById("inputImageUrl").value;
     var newBiography = document.getElementById("inputBiography").value;
@@ -76,14 +76,14 @@
       newImageUrl: newImageUrl,
       newBiography: newBiography
     };
-    fetch(`/profile`, {
+    await fetch(`/profile`, {
       method: "post",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(msg)
-    });
+    }).then(() => window.location.href = "/app");
   });
 </script>
 

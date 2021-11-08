@@ -5,20 +5,18 @@ var helper = require('./helpers.js');
 function createRoutes(app){
 
   app.get("/app", async function (req, res) {
+    var db = helper.openDB();
+    var query = `SELECT * FROM events`;
+    var {rows} = await helper.queryDB(db, query, []);
     if (req.userId){
-      var db = helper.openDB();
-      var query = `SELECT * FROM events`;
-      var {rows} = await helper.queryDB(db, query, []);
-
-
       var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
       var result = await helper.queryDB(db, query, []);
       var {displayName, profilePicture} = result.rows[0];
-      res.render("app", {events:rows, displayName:displayName, profilePicture:profilePicture, helper:helper})
-      db.close((err) => helper.errorCatch(err));
+      res.render("app", {loggedIn:true, events:rows, displayName:displayName, profilePicture:profilePicture, helper:helper})
     } else {
-      res.redirect('/')
+      res.render("app", {loggedIn: false, events:rows, helper:helper})
     }
+    db.close((err) => helper.errorCatch(err));
   });
 
   app.get("/chat/:eventId", async function (req, res) {
@@ -148,16 +146,40 @@ function createRoutes(app){
 
       app.get('/profile/:userId', async (req, res) => {
         // get profile pic and displayname from db
+
         var db = await helper.openDB();
         var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.params.userId}`;
         var result = await helper.queryDB(db, sql, []);
         var {displayName, profilePicture, biography} = result.rows[0];
-        if (req.params.userId == req.userId){
-          res.render("editProfile", {displayName:displayName, profilePicture:profilePicture, biography:biography});
+        
+        if (req.userId == undefined){
+          res.render("profile", {loggedIn: false, displayName:displayName, profilePicture:profilePicture, biography:biography});
+          return;
+        } else if (req.userId == req.params.userId){
+          res.render("editProfile", {displayName:displayName, profilePicture:profilePicture, biography:biography})
         } else {
-          res.render("profile", {displayName:displayName, profilePicture:profilePicture, biography:biography});
+          var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.userId}`;
+          var result = await helper.queryDB(db, sql, []);
+          var {displayName: myDisplayName, profilePicture: myProfilePicture, biography: myBiography} = result.rows[0];
+          res.render("profile", {loggedIn: true, displayName:displayName, profilePicture:profilePicture, biography:biography, myBiography:myBiography, myDisplayName:myDisplayName, myProfilePicture:myProfilePicture})
         }
 
+        
+
+        db.close((err) => helper.errorCatch(err));
+
+        // var db = await helper.openDB();
+        // var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.params.userId}`;
+        // var result = await helper.queryDB(db, sql, []);
+        // var {myDisplayName, myProfilePicture, myBiography} = result.rows[0];
+        // if (req.params.userId == req.userId){
+        //   res.render("editProfile", {displayName:myDisplayName, profilePicture:myProfilePicture, biography:myBiography});
+        // } else{
+        //   var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.params.userId}`;
+        // var result = await helper.queryDB(db, sql, []);
+        // var {myDisplayName, myProfilePicture, myBiography} = result.rows[0];
+        //   res.render("profile", {displayName:displayName, profilePicture:profilePicture, biography:biography});
+        // }
       });
 
       app.post("/profile", async (req, res) => {
@@ -169,6 +191,7 @@ function createRoutes(app){
                (err) => helper.errorCatch(err));
 
         db.close((err) => helper.errorCatch(err));
+        res.sendStatus(200);
       });
 
       app.get("/logout", async (req, res) => {

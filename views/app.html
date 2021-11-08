@@ -28,10 +28,15 @@
             <input type="text" id="searchBar" placeholder="Search"/>
         </div>
 
-        <div id="authbox" onclick="window.location = '/profile';">
-            <img id="profilePic" src="/images<%= profilePicture %>"/>
-            <span id="displayName"><%= displayName %></span>
-        </div>
+        <% if (locals.loggedIn) { %>
+          <div id="authbox" onclick="window.location = '/profile';">
+              <img id="profilePic" src="/images<%= profilePicture %>"/>
+              <span id="displayName"><%= displayName %></span>
+          </div>
+          <% } else { %>
+            <button class="registerButton" onclick="window.location = '/register'">Register</button>
+            <button class="loginButton" onclick="window.location = '/login'" >Sign In</button>
+          <% } %>
       </nav>
 
     <div id="container">

@@ -24,6 +24,20 @@
     p{
       font-size: 20px;
     }
+
+    .loginButton{
+      position: fixed;
+      top: 5px;
+      right: 10px;
+      width: 100px;
+    }
+
+    .registerButton{
+      position: fixed;
+      top: 5px;
+      right: 10px;
+      width: 100px;
+    }
   </style>
 </head>
 
@@ -43,10 +57,15 @@
     <input type="text" id="searchBar" placeholder="Search"/>
 </div>
 
+<% if (locals.loggedIn) { %>
 <div id="authbox" onclick="window.location = '/profile';">
-    <img id="profilePic" src="/images<%= profilePicture %>"/>
-    <span id="displayName"><%= displayName %></span>
+    <img id="profilePic" src="/images<%= myProfilePicture %>"/>
+    <span id="displayName"><%= myDisplayName %></span>
 </div>
+<% } else { %>
+  <button class="registerButton" onclick="window.location = '/register'">Register</button>
+  <button class="loginButton" onclick="window.location = '/login'" >Sign In</button>
+<% } %>
 </nav>
 
   <div class="container">
