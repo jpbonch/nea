@@ -13,9 +13,9 @@ function createRoutes(app){
       var result = await helper.queryDB(db, query, []);
       var {displayName, profilePicture} = result.rows[0];
       res.render("app", {loggedIn:true, events:rows, displayName:displayName,
-                         profilePicture:profilePicture, helper:helper})
+                         profilePicture:profilePicture})
     } else {
-      res.render("app", {loggedIn: false, events:rows, helper:helper})
+      res.render("app", {loggedIn: false, events:rows})
     }
     db.close((err) => helper.errorCatch(err));
   });
@@ -95,6 +95,8 @@ function createRoutes(app){
 // profile pictures on messages (need to change db)
 // make search actually work
 // remove old events
+// event details on chat page
+// add red dot to live games
       var hash = helper.hashPassword(password);
       var defaultName = email.split('@')[0];
       var defaultPicture = "/images/default.jpeg";

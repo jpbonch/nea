@@ -11,6 +11,44 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <%
+
+    function padTime(time) {
+        return (time < 10) ? "0" + time : time;
+    }
+
+    function getDayName(date){
+      var dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      return dayNames[date.getDay()];
+    }
+
+    function getMonthName(date){
+      var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      return monthNames[date.getMonth()];
+    }
+
+    function formatDate(date){
+      // Default May 11th, 2020
+      // If same year, May 11th
+      // If same week, Saturday/ last Saturday
+      // If same day, 00:00
+      var inputDate = new Date(date);
+      var todayDate = new Date();
+      if (inputDate.toISOString().split('T')[0] == todayDate.toISOString().split('T')[0]){
+        return padTime(inputDate.getHours()) + ":" + padTime(inputDate.getMinutes());
+      }
+      if (inputDate - todayDate > 0){
+        return getDayName(inputDate);
+      }
+      if (todayDate - inputDate < 0){
+        return "Last " + getDayName(inputDate)
+      }
+      if (inputDate.getFullYear() == todayDate.getFullYear()){
+        return getMonthName(inputDate) + " " + inputDate.getDate();
+      }
+      return `${getMonthName(inputDate)} ${inputDate.getDate()}, ${inputDate.getFullYear()}`
+    }
+    %>
 </head>
 <body>
     <nav>
@@ -42,19 +80,22 @@
     <div id="container">
       <% for(event of events) { %>
             <div class="box" onclick="window.location = '/chat/' + <%= event.eventId %>">
-            <span class="versus"><%= event.vTeamFullName + " vs " + event.hTeamFullName %></span>
-
-            <div class="logoBox">
-              <img class="logo" src="<%= event.vTeamLogo %>">
-              <img class="logo" src="<%= event.hTeamLogo %>">
+              <div class="boxHeader">
+              <span class="date"><%= formatDate(event.startTimeUTC) %></span>
+              <span class="league"><%= event.league %></span>
             </div>
-            <span class="date"><%= helper.formatDate(event.startTimeUTC) %></span>
-            <div class="scoreBox">
-            <span><%= event.vTeamScore %></span>
-            -
-            <span><%= event.hTeamScore %></span>
-          </div>
-            </div>
+              <div class="teamInfo">
+                <img class="logo" src="<%= event.hTeamLogo %>">
+                <span class='teamName'><%= event.hTeamFullName %></span>
+                <span class="score"><%= event.hTeamScore %></span>
+              </div>
+                <div class="teamInfo">
+                <img class="logo" src="<%= event.vTeamLogo %>">
+                <span class='teamName'><%= event.vTeamFullName %></span>
+                <span class="score"><%= event.vTeamScore %></span>
+              </div>
+              <span class="statusGame"><%= event.statusGame %></span>
+              </div>
       <% } %>
     </div>
 </body>

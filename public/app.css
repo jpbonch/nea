@@ -34,7 +34,7 @@ to   { opacity: 1; }
   padding: 10px;
   display: inline-block;
   width: 45%;
-  height: 200px;
+  height: 140px;
   margin: 10px;
 }
 
@@ -59,32 +59,42 @@ to   { opacity: 1; }
   width: 100px;
 }
 
-.versus{
-  white-space:nowrap;
-  font-size: calc(100% * 1.3);
-  display: block;
-  text-align: center;
-  font-weight: 500;
-}
-
 .logo{
-  width: 100px;
-  height: 100px;
-}
-
-.logoBox{
-  display: flex;
-  justify-content: space-around;
-  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
 }
 
 .date{
-  text-align: center;
   color: darkgray;
-  display: block;
+  display: inline-block;
 }
 
-.scoreBox{
+.statusGame{
+  color: darkgray;
+  display: inline-block;
+  float: right;
+  margin: 0
+}
+
+.league{
+  color: darkgray;
+  display: inline-block;
+  margin-left: auto;
+}
+
+.boxHeader{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.score{
+  margin-left: auto;
+  margin-right: 8px;
+}
+
+.teamInfo{
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
 }
