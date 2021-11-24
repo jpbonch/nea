@@ -47,31 +47,7 @@
 </head>
 
 <body>
-    <nav>
-      <img id="home" src="/images/home.png" onclick="window.location = '/app';"/>
-
-  <div id="selectEventDiv">
-    <select id="searchSelect">
-      <option>Team</option>
-      <option>Sport</option>
-      <option>League</option>
-      <option>Arena</option>
-      <option>City</option>
-    </select>
-
-    <input type="text" id="searchBar" placeholder="Search"/>
-</div>
-
-<% if (locals.loggedIn) { %>
-<div id="authbox" onclick="window.location = '/profile';">
-    <img id="profilePic" src="<%= myProfilePicture %>"/>
-    <span id="displayName"><%= myDisplayName %></span>
-</div>
-<% } else { %>
-  <button class="registerButton" onclick="window.location = '/register'">Register</button>
-  <button class="loginButton" onclick="window.location = '/login'" >Sign In</button>
-<% } %>
-</nav>
+    <%- include('./navbar.html'); %>
 
   <div class="container">
     <div class="leftColumn">

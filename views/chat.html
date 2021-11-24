@@ -7,26 +7,7 @@
     <link rel="stylesheet" href="/chat.css">
 </head>
 <body>
-  <nav>
-    <img id="home" src="/images/home.png" onclick="window.location = '/app';"/>
-
-    <div id="selectEventDiv">
-        <select id="searchSelect">
-          <option>Team</option>
-          <option>Sport</option>
-          <option>League</option>
-          <option>Arena</option>
-          <option>City</option>
-        </select>
-
-        <input type="text" id="searchBar" placeholder="Search"/>
-    </div>
-
-      <div id="authbox" onclick="window.location = '/profile';">
-          <img id="profilePic" src="<%= profilePicture %>"/>
-          <span id="displayName"><%= displayName %></span>
-      </div>
-  </nav>
+  <%- include('./navbar.html'); %>
 
     <div id="chatArea">
     <div id="chatBox">

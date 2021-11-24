@@ -5,7 +5,7 @@
     <title>NEA</title>
     <link rel="icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="/app.css" />
     <link rel="stylesheet" href="/navbar.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,31 +51,8 @@
     %>
 </head>
 <body>
-    <nav>
-        <img id="home" src="/images/home.png" onclick="window.location = '/app';"/>
+    <%- include('./navbar.html'); %>
 
-        <div id="selectEventDiv">
-            <select id="searchSelect">
-              <option>Team</option>
-              <option>Sport</option>
-              <option>League</option>
-              <option>Arena</option>
-              <option>City</option>
-            </select>
-
-            <input type="text" id="searchBar" placeholder="Search"/>
-        </div>
-
-        <% if (locals.loggedIn) { %>
-          <div id="authbox" onclick="window.location = '/profile';">
-              <img id="profilePic" src="<%= profilePicture %>"/>
-              <span id="displayName"><%= displayName %></span>
-          </div>
-          <% } else { %>
-            <button class="registerButton" onclick="window.location = '/register'">Register</button>
-            <button class="loginButton" onclick="window.location = '/login'" >Sign In</button>
-          <% } %>
-      </nav>
 
     <div id="container">
       <% for(event of events) { %>
