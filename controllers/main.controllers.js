@@ -7,7 +7,7 @@ function getIndex(req, res) {
 
 async function getApp(req, res) {
   var db = helper.openDB();
-  var query = `SELECT * FROM events`;
+  var query = `SELECT * FROM events ORDER BY startTimeUTC ASC`;
   var {rows} = await helper.queryDB(db, query, []);
   if (req.userId){
     var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;

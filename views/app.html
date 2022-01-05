@@ -55,7 +55,12 @@
 
 
     <div id="container">
+
+      <% for(sport of ["nba", "football", "basketball", "rugby", "hockey", "formula1"]) { %>
+        <h1 class="sportTitle"><%= sport %></h1>
+      <% var i = 0 %>
       <% for(event of events) { %>
+            <% if (event.sport == sport) { %>
             <div class="box" onclick="window.location = '/chat/' + <%= event.eventId %>">
               <div class="boxHeader">
               <span class="date"><%= formatDate(event.startTimeUTC) %></span>
@@ -73,6 +78,12 @@
               </div>
               <span class="statusGame"><%= event.statusGame %></span>
               </div>
+              <% i++ %>
+              <% if (i == 4) { 
+                  break;
+               } %>
+              <% } %>
+      <% } %>
       <% } %>
     </div>
 </body>

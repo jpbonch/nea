@@ -13,6 +13,10 @@ from { opacity: 0; }
 to   { opacity: 1; }
 }
 
+[src=''] {
+  visibility: hidden;
+}
+
 
 #container{
   padding-top: 100px;
@@ -97,4 +101,9 @@ to   { opacity: 1; }
   margin-top: 5px;
   display: flex;
   align-items: center;
+}
+
+.sportTitle{
+  text-transform: capitalize;
+  color: white;
 }

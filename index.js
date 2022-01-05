@@ -67,3 +67,7 @@ io.on('connection', (socket) => {
 // pre match votes?
 // voice messages
 // composite keys
+
+// 2. Repeated events?
+// 4. do search
+// clickable teams
