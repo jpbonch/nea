@@ -56,11 +56,25 @@
 
     <div id="container">
 
-      <% for(sport of ["nba", "football", "basketball", "rugby", "hockey", "formula1"]) { %>
-        <h1 class="sportTitle"><%= sport %></h1>
-      <% var i = 0 %>
-      <% for(event of events) { %>
-            <% if (event.sport == sport) { %>
+      
+
+      <div id="sportPicker">
+
+        <div class="sportButton" onclick="window.location = '/search?sport=football'">⚽</div>
+        <div class="sportButton" onclick="window.location = '/search?sport=basketball'">🏀</div>
+        <div class="sportButton" onclick="window.location = '/search?sport=rugby'">🏉</div>
+        <div class="sportButton" onclick="window.location = '/search?sport=hockey'">🏒</div>
+        <div class="sportButton" onclick="window.location = '/search?sport=formula1'">🏎️</div>
+
+      </div>
+
+
+      <h2 id="searchDescriptor"></h2>
+
+      <% for (sport in events) { %>
+          <h1 class="sportTitle"><%= sport %></h1>
+          <% var i = 0; %>
+          <% for (event of events[sport]){ %>
             <div class="box" onclick="window.location = '/chat/' + <%= event.eventId %>">
               <div class="boxHeader">
               <span class="date"><%= formatDate(event.startTimeUTC) %></span>
@@ -78,13 +92,29 @@
               </div>
               <span class="statusGame"><%= event.statusGame %></span>
               </div>
-              <% i++ %>
-              <% if (i == 4) { 
-                  break;
-               } %>
-              <% } %>
+              <% i++; %>
+              <% if (i == maxEvents) { %>
+                <%  break; %>
+              <%  } %>
+            <% } %>
+      <%  } %>
+
+      <% if (Object.keys(event).length == 0){ %>
+        <h2 id="searchDescriptor">No events found</h2>
       <% } %>
-      <% } %>
+
+
     </div>
+    <script>
+
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+
+      if (Object.keys(params).length != 0 && Object.keys(params)[0] != 'sport'){
+        var searchDescriptor = document.getElementById("searchDescriptor");
+        searchDescriptor.innerText = `Search for ${params[Object.keys(params)[0]]}`;
+      }
+
+    </script>
 </body>
 </html>

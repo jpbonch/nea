@@ -27,6 +27,29 @@ to   { opacity: 1; }
   width: clamp(200px, 1000px, 1500px);
 }
 
+#sportPicker{
+  width:100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.sportButton{
+  width: 70px;
+  height: 70px;
+  font-size: 50px;
+  background-color: #1E1E1F;
+  box-shadow: 0px 0px 10px 0px black;
+  border-radius: 50%;
+  padding: 20px
+}
+
+.sportButton:hover{
+  background-color: #3a3b3c;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
 .box{
   border-radius: 15px;
   background-color:#1E1E1F;
@@ -46,6 +69,10 @@ to   { opacity: 1; }
   background-color: #3a3b3c;
   cursor: pointer;
   transition: background-color 0.1s;
+}
+
+#searchDescriptor{
+  color: gray;
 }
 
 

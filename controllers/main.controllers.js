@@ -13,8 +13,9 @@ async function getApp(req, res) {
     var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
     var result = await helper.queryDB(db, query, []);
     var {displayName, profilePicture} = result.rows[0];
-    res.render("app", {loggedIn:true, events:rows, displayName:displayName,
-                       profilePicture:profilePicture, userId:req.userId})
+    var events = helper.sortSports(rows);
+    res.render("app", {loggedIn:true, events:events, displayName:displayName,
+                       profilePicture:profilePicture, userId:req.userId, maxEvents:4})
   } else {
     res.render("app", {loggedIn: false, events:rows})
   }
@@ -57,11 +58,37 @@ async function postWrite(req, res) {
   db.close((err) => helper.errorCatch(err));
 }
 
+async function getSearch(req, res) {
+  let db = helper.openDB();
+  var key = Object.keys(req.query)[0];
+  if (key == "team"){
+    var condition = `hTeamFullName LIKE '%${req.query[key]}%' OR vTeamFullName LIKE '%${req.query[key]}%'`;
+  } else {
+    var condition = `${key} LIKE '%${req.query[key]}%'`;
+  }
+  var sql = `SELECT * FROM events WHERE ${condition} ORDER BY startTimeUTC ASC`
+  var result = await helper.queryDB(db, sql, []);
+
+  var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
+  var resp = await helper.queryDB(db, query, []);
+  var {displayName, profilePicture} = resp.rows[0];
+
+  var events = helper.sortSports(result.rows);
+  
+  res.render("app", {loggedIn:true, events:events, displayName:displayName,
+                       profilePicture:profilePicture, userId:req.userId, maxEvents:50})
+
+
+  db.close((err) => helper.errorCatch(err));
+  
+}
+
 
 
 module.exports = {
   getApp,
   getChat,
   postWrite,
-  getIndex
+  getIndex,
+  getSearch
 };

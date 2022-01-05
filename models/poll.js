@@ -31,20 +31,6 @@ async function updateFootball(data){
   await db.close((err) => helper.errorCatch(err));
 }
 
-async function updateNBA(data){
-  let db = await helper.openDB();
-  for (game of data.api.games){
-  await db.run(`REPLACE INTO "events" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [game.id, "nba", game.startTimeUTC, game.statusGame, game.league, game.arena, game.city, game.country, game.currentPeriod,
-    game.vTeam.shortName, game.vTeam.fullName, game.vTeam.logo, game.vTeam.score.points,
-    game.hTeam.shortName, game.hTeam.fullName, game.hTeam.logo, game.hTeam.score.points],
-    function(err) {if (err) {console.error(err.message)}
-      console.log(`A row has been inserted with rowid ${this.lastID}`);
-    });
-  }
-  await db.close((err) => helper.errorCatch(err));
-}
-
 async function updateBaseball(data){
   let db = await helper.openDB();
   for (game of data.response){
@@ -110,8 +96,6 @@ async function updateDatabase(data){
         updateBasketball(data[sport])
       } else if (sport == "football"){
         updateFootball(data[sport])
-      } else if (sport == "nba"){
-        updateNBA(data[sport])
       } else if (sport == "baseball"){
         updateBaseball(data[sport])
       } else if (sport == "rugby"){
@@ -135,9 +119,6 @@ async function fetchEvents() {
       //  {url: "https://api-basketball.p.rapidapi.com/games?date=" + todayString,
       //   sport: "basketball",
       //  headers: {"x-rapidapi-host": "api-basketball.p.rapidapi.com", "x-rapidapi-key": process.env.API_KEY}},
-        // {url: "https://api-nba-v1.p.rapidapi.com/games/date/" + todayString,
-        // sport: "nba",
-        // headers: {"x-rapidapi-host": "api-nba-v1.p.rapidapi.com", "x-rapidapi-key": process.env.API_KEY}},
         // {url: "https://api-baseball.p.rapidapi.com/games?date=" + todayString,
         // sport: "baseball",
         // headers: {"x-rapidapi-host": "api-baseball.p.rapidapi.com", "x-rapidapi-key": process.env.API_KEY}},

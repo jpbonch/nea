@@ -71,3 +71,5 @@ io.on('connection', (socket) => {
 // 2. Repeated events?
 // 4. do search
 // clickable teams
+//search.html
+// pick sport on main page

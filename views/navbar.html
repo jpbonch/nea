@@ -3,11 +3,11 @@
 
     <div id="selectEventDiv">
         <select id="searchSelect">
-          <option>Team</option>
-          <option>Sport</option>
-          <option>League</option>
-          <option>Arena</option>
-          <option>City</option>
+          <option value="team" selected>Team</option>
+          <option value="sport">Sport</option>
+          <option value="league">League</option>
+          <option value="arena">Arena</option>
+          <option value="city">City</option>
         </select>
 
         <input type="text" id="searchBar" placeholder="Search"/>
@@ -22,4 +22,18 @@
         <button class="registerButton" onclick="window.location = '/register'">Register</button>
         <button class="loginButton" onclick="window.location = '/login'" >Sign In</button>
       <% } %>
-  </nav>
+</nav>
+<script>
+  var searchBar = document.getElementById('searchBar');
+  var searchSelect = document.getElementById("searchSelect");
+
+  searchBar.addEventListener("keydown", function(event) {
+  if (event.keyCode === 13) {
+    var params = {};
+    params[searchSelect.value] = searchBar.value;
+    console.log(params)
+    console.log('/search?' + new URLSearchParams(params))
+    window.location = '/search?' + new URLSearchParams(params)
+  }
+});
+</script>

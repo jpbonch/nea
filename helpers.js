@@ -53,11 +53,23 @@ function queryDB(db, sql, params){
   })
 }
 
+function sortSports(events){
+  var sortedEvents = {};
+  for(event of events) {
+    if (sortedEvents[event.sport] == undefined){
+      sortedEvents[event.sport] = [];
+    } 
+    sortedEvents[event.sport].push(event)
+  }
+  return sortedEvents;
+}
+
 module.exports = {
   formatDate: formatDate,
   openDB: openDB,
   errorCatch: errorCatch,
   hashPassword: hashPassword,
   genAuthToken: genAuthToken,
-  queryDB: queryDB
+  queryDB: queryDB,
+  sortSports: sortSports
 }
