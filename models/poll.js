@@ -6,6 +6,7 @@ const sqlite3 = require("sqlite3").verbose();
 async function updateBasketball(data){
   let db = await helper.openDB();
   for (game of data.response){
+
   await db.run(`REPLACE INTO "events" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   [game.id, "basketball", game.date, game.status.long, game.league.name, game.stage, game.city, game.country.name, game.status.short,
   game.teams.away.name, game.teams.away.name, game.teams.away.logo, game.scores.away.total,

@@ -62,7 +62,7 @@ async function getProfile(req, res) {
     res.render("profile", {loggedIn: false, displayName:displayName, profilePicture:profilePicture, biography:biography});
     return;
   } else if (req.userId == req.params.userId){
-    res.render("editProfile", {displayName:displayName, profilePicture:profilePicture, biography:biography, userId:req.userId})
+    res.render("editProfile", {loggedIn:true, displayName:displayName, profilePicture:profilePicture, biography:biography, userId:req.userId})
   } else {
     var sql = `SELECT displayName, profilePicture, biography FROM users WHERE userId=${req.userId}`;
     var result = await helper.queryDB(db, sql, []);
@@ -129,6 +129,26 @@ async function getDelete(req, res) {
 }
 
 
+async function postChangePassword(req, res) {
+  var { currentPass, newPass } = req.body;
+  var hash = helper.hashPassword(currentPass);
+  var newHash = helper.hashPassword(newPass);
+
+  var db = await helper.openDB();
+  var query = `SELECT passwordHash FROM users WHERE userId=${req.userId}`;
+  var result = await helper.queryDB(db, query, []);
+  if (result.rows[0].passwordHash == hash){
+    await db.run(`UPDATE "users" SET passwordHash="${newHash}" WHERE userId=${req.userId}`, [],
+             (err) => helper.errorCatch(err));
+    res.send({response: "Succesfully changed password.", class:"success"})
+  } else {
+    res.send({response: "Incorrect current password", class:"error"})
+  }
+  db.close((err) => helper.errorCatch(err));
+}
+
+
+
 module.exports = {
   getLogin,
   postRegister,
@@ -137,5 +157,6 @@ module.exports = {
   postProfile,
   getDelete,
   getLogout,
-  postLogin
+  postLogin,
+  postChangePassword
 };

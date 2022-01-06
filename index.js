@@ -51,25 +51,18 @@ io.on('connection', (socket) => {
 });
 
 // api more sports, future events, past events
-// change password
 // limits on displayName length, pfp size, obscene filters
-// message when new profile saved
 // green border around username input not obscene
-// email address verification
 // frontend
-//forgot password on login
-//make separate stylesheets
-// profile pictures on messages (need to change db)
-// make search actually work
+// forgot password on login
 // remove old events
 // event details on chat page
 // add red dot to live games
 // pre match votes?
 // voice messages
 // composite keys
+// chat room not unique, needs :sport
 
-// 2. Repeated events?
-// 4. do search
-// clickable teams
-//search.html
-// pick sport on main page
+
+
+//done

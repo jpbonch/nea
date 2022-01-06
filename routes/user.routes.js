@@ -10,5 +10,6 @@ router.post('/profile', userControllers.postProfile);
 router.get('/delete', userControllers.getDelete);
 router.get('/logout', userControllers.getLogout);
 router.post('/login', userControllers.postLogin);
+router.post('/changepassword', userControllers.postChangePassword);
 
 module.exports = router;

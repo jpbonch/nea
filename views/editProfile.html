@@ -14,11 +14,27 @@
 
 <body>
   <div id="shade">
-    <div id="changeProfilePopup">
+    <div class="shadePopup">
+      <div id="imageChanging">
+      Insert URL of image. 
+      Leave blank for default.
       <input type="text" id="inputImageUrl" value="<%= profilePicture %>" placeholder="Image URL">
+      <button id="saveImageButton">Save</button>
+    </div>
+
+    <div id="passwordChanging">
+      <p id="messageLabel"></p>
+      Current Password
+      <input type="password" id="currentPasswordInput" placeholder="Current Password">
+      New Password
+      <input type="password" id="newPasswordInput" placeholder="New Password">
+      <button id="savePasswordButton">Save</button>
+    </div>
+      
       <span id="closePopupButton">X</span>
     </div>
   </div>
+
 
   <%- include('./navbar.html'); %>
 
@@ -26,12 +42,12 @@
     <div class="leftColumn">
       <div class="profilePictureContainer">
         <img src="<%= profilePicture %>" id="profilePicture" />
-        <div class="pencilCircle">
+        <div id="pencil" class="pencilCircle">
           <img class="pencil" src="/pencil.svg" />
         </div>
       </div>
     <button id="logOut" onclick="window.location = '/logout';">Log Out</button>
-    <button>Change Password</button>
+    <button id="changePassword">Change Password</button>
     <button id="deleteAccount" onclick="window.location = '/delete';">Delete Account</button>
   </div>
 
@@ -71,12 +87,56 @@
 <script>
   document.getElementById("profilePicture").addEventListener("click", () => {
     document.getElementById("shade").style.display = "block";
+    document.getElementById("imageChanging").style.display = "block";
   });
+  document.getElementById("pencil").addEventListener("click", () => {
+    document.getElementById("shade").style.display = "block";
+    document.getElementById("imageChanging").style.display = "block";
+  });
+  document.getElementById("saveImageButton").addEventListener("click", () => {
+    var value = document.getElementById("inputImageUrl").value;
+    if (value == ""){
+      value = "/images/default.jpeg";
+    }
+    document.getElementById("profilePicture").src = value;
+    document.getElementById("shade").style.display = "none";
+    document.getElementById("imageChanging").style.display = "none";
+  });
+
+  document.getElementById("changePassword").addEventListener("click", () => {
+    document.getElementById("shade").style.display = "block";
+    document.getElementById("passwordChanging").style.display = "block";
+  });
+
 
   document.getElementById("closePopupButton")
     .addEventListener("click", () => {
       document.getElementById("shade").style.display = "none";
+      document.getElementById("imageChanging").style.display = "none";
+      document.getElementById("passwordChanging").style.display = "none";
     });
+
+  function showMessage(jsonresult){
+    var messagelabel = document.getElementById("messageLabel");
+    messagelabel.innerText = jsonresult.response;
+    messagelabel.classList = jsonresult.class;
+  }
+
+  document.getElementById("savePasswordButton").addEventListener("click", () => {
+    var currentPass = document.getElementById("currentPasswordInput").value;
+    var newPass = document.getElementById("newPasswordInput").value;
+    var msg = {currentPass, newPass};
+    fetch(`/changepassword`, {
+      method: "post",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(msg)
+    }).then(response => response.json()).then(jsonresult => showMessage(jsonresult))
+
+  });
+
 </script>
 
 <script>

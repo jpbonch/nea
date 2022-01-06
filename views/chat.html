@@ -5,6 +5,8 @@
     <title>Chat</title>
     <link rel="stylesheet" href="/navbar.css">
     <link rel="stylesheet" href="/chat.css">
+
+
 </head>
 <body>
   <%- include('./navbar.html'); %>
@@ -13,10 +15,13 @@
     <div id="chatBox">
       <% for(message of messages.reverse()) { %>
             <div class="messageDiv">
-            <span class="displayName" onclick="window.location = '/profile/<%= message.userId %>';"><%= message.displayName %></span>
-            <span class="content"><%= message.content %></span>
-            <span class="time"><%= helper.formatDate(message.time) %></span>
-            </div>
+              <div class="userContainer" onclick="window.location = '/profile/<%= message.userId %>'";>
+                <img src="<%= message.profilePicture %>" class="messagePfp">
+                <span class="displayName"><%= message.displayName %></span>
+             </div>
+              <span class="content"><%= message.content %></span>
+              <span class="time"><%= helper.formatDate(message.time) %></span>
+              </div>
       <% } %>
     </div>
     <div id="inputDiv">
@@ -26,6 +31,13 @@
 </div>
 
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+<script>
+  async function getProfilePic(userId){
+  var result = await fetch("/profilepicture/"+userId);
+  var jsonresult = await result.json()
+  return jsonresult;
+}
+</script>
 <script>
     var chatbox = document.getElementById("chatBox");
     chatbox.scrollTop = chatbox.scrollHeight;
@@ -60,12 +72,17 @@
   }
 });
 
-    socket.on('chat message', function(msg) {
+    socket.on('chat message', async function(msg) {
       var formatDate = <%- helper.formatDate %>;
       var time = formatDate(msg.time);
       // var time = formatDate(msg.time)
-      messageBox.innerHTML = `<div class='messageDiv'>
-      <span class="displayName" onclick="window.location = '/profile/${msg.userId}';">${msg.displayName}</span>
+      var image = await getProfilePic(msg.userId);
+      messageBox.innerHTML = `
+      <div class='messageDiv'>
+      <div class="userContainer" onclick="window.location = '/profile/${msg.userId}';">
+        <img src=${image.response} class="messagePfp">
+        <span class="displayName">${msg.displayName}</span>
+      </div>
       <span class="content">${msg.content}</span>
       <span class="time">${time}</span>
       </div>` + messageBox.innerHTML;
