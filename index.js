@@ -10,6 +10,7 @@ require('dotenv').config()
 var userRouter = require('./routes/user.routes.js');
 var mainRouter = require('./routes/main.routes.js');
 var startPolling = require('./models/poll.js');
+var Filter = require('bad-words');
 
 
 
@@ -46,6 +47,8 @@ server.listen(80, () => {console.log('listening on port 80')});
 const io = new Server(server);
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
+    filter = new Filter();
+    msg.content = filter.clean(msg.content);
     io.emit('chat message', msg);
   });
 });
@@ -57,12 +60,16 @@ io.on('connection', (socket) => {
 // forgot password on login
 // remove old events
 // event details on chat page
-// add red dot to live games
-// pre match votes?
+// pre match votes? 
 // voice messages
 // composite keys
 // chat room not unique, needs :sport
 
-
+//pagination
+// gif
+//update events tomorrow every 6 hours
+//update events today every few minutes
+// muting
+// improve code
 
 //done

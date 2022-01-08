@@ -76,19 +76,6 @@ to   { opacity: 1; }
 }
 
 
-.loginButton{
-  position: fixed;
-  top: 5px;
-  right: 10px;
-  width: 100px;
-}
-
-.registerButton{
-  position: fixed;
-  top: 5px;
-  right: 100px;
-  width: 100px;
-}
 
 .logo{
   width: 40px;

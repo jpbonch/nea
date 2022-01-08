@@ -59,11 +59,11 @@ body{
 
 #chatArea{
     position: absolute;
-    top: 50%;
+    top: 54%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: clamp(400px, 60%, 800px);
-    height: 70%;
+    height: 80%;
 }
 
 .fade{
@@ -86,7 +86,7 @@ body{
   display: flex;
   flex-direction: column-reverse;
   overflow-y: scroll;
-  height: 90%;
+  height: 70%;
   bottom: 0;
   margin-bottom: 40px;
   width: 100%;
@@ -123,4 +123,45 @@ body{
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+}
+
+#gifButton{
+    width: 50px;
+    background-color: #2A222C;
+    color:white
+}
+
+#gifBox{
+    display: none;
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+#scoreDiv, #locationDiv, #dateInfo{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#teamDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#infoDiv{
+    width: 500px;
+    margin: auto;
+}
+
+.teamImage{
+    width: 30px;
+    height:30px;
+    margin-bottom: -10px;
 }

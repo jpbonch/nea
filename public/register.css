@@ -1,0 +1,71 @@
+.failure{
+    width: 100px;
+    height: 50px;
+    background-color: red;
+  }
+
+  body{
+    font-family: 'Roboto', sans-serif;
+    background-color: #131312;
+    max-width: 500px;
+    margin: auto;
+    animation: fadein 1s;
+    color: white;
+    margin-top: 7vh;
+  }
+
+  @keyframes fadein {
+from { opacity: 0; }
+to   { opacity: 1; }
+}
+
+  #registerButton{
+    background-color: orangered;
+    border: 2px solid orangered
+  }
+
+
+  button{
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: white;
+    border-radius: 5px;
+  }
+
+  input{
+    width: 100%;
+    height: 35px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    border: 0;
+    outline: 0;
+    padding: 3px;
+    padding-left: 12px;
+    font-size: 17px;
+  }
+
+  input:focus{
+    outline: 2px solid orangered;
+  }
+
+  h1{
+    display: inline-block;
+  }
+
+  #close{
+    font-size: 30px;
+    position: relative;
+    bottom: -5px;
+  }
+
+  #close:hover{
+    cursor: pointer;
+  }
+
+  .header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

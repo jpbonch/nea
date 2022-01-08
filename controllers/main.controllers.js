@@ -9,15 +9,15 @@ async function getApp(req, res) {
   var db = helper.openDB();
   var query = `SELECT * FROM events ORDER BY startTimeUTC ASC`;
   var {rows} = await helper.queryDB(db, query, []);
+  var events = helper.sortSports(rows);
   if (req.userId){
     var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
     var result = await helper.queryDB(db, query, []);
     var {displayName, profilePicture} = result.rows[0];
-    var events = helper.sortSports(rows);
     res.render("app", {loggedIn:true, events:events, displayName:displayName,
                        profilePicture:profilePicture, userId:req.userId, maxEvents:4})
   } else {
-    res.render("app", {loggedIn: false, events:rows})
+    res.render("app", {loggedIn: false, events:events, maxEvents:4})
   }
   db.close((err) => helper.errorCatch(err));
 }
@@ -37,9 +37,12 @@ async function getChat(req, res) {
   var result = await helper.queryDB(db, sql, []);
   var {displayName: displayName, profilePicture: profilePicture, biography: biography} = result.rows[0];
 
-  
+  var query = `SELECT startTimeUTC, vTeamFullName, hTeamFullName, vTeamLogo, hTeamLogo, vTeamScore, hTeamScore, statusGame, arena, city, country FROM events WHERE eventId=${req.params.eventId}`;
+  var result = await helper.queryDB(db, query, []);
+  var event = result.rows[0];
+  event.startTimeUTC = helper.formatDate(event.startTimeUTC)
 
-  res.render("chat", {loggedIn:true, userId:req.userId, messages:rows, helper:helper, eventId:req.params.eventId, displayName:displayName, profilePicture:profilePicture});
+  res.render("chat", {loggedIn:true, userId:req.userId, messages:rows, event:event, helper:helper, eventId:req.params.eventId, displayName:displayName, profilePicture:profilePicture});
 
   db.close((err) => helper.errorCatch(err));
 } else {

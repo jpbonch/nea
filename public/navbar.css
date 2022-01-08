@@ -8,6 +8,27 @@ nav{
   box-shadow: 0px 0px 10px 0px black;
   font-family: 'Roboto', sans-serif;
 }
+.loginButton, .registerButton{
+  position: fixed;
+  top: 15px;
+  right: 10px;
+  width: 80px;
+  border-radius: 10px;
+  padding: 10px;
+  border: 0px;
+  color:white;
+  background-color: #1E1E1F;
+}
+
+.loginButton{
+  right: 100px
+}
+
+.registerButton{
+  right: 10px
+}
+
+
 
 #searchBar{
   width: 300px;

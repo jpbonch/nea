@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<script>
+
+// url Async requesting function
+function httpGetAsync(theUrl, callback)
+{
+    // create the request object
+    var xmlHttp = new XMLHttpRequest();
+
+    // set the state change callback to capture when the response comes in
+    xmlHttp.onreadystatechange = function()
+    {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        {
+            callback(xmlHttp.responseText);
+        }
+    }
+
+    // open as a GET call, pass in the url and set async = True
+    xmlHttp.open("GET", theUrl, true);
+
+    // call send with no params as they were passed in on the url string
+    xmlHttp.send(null);
+
+    return;
+}
+
+// callback for trending top 10 GIFs
+function tenorCallback_trending(responsetext)
+{
+    // parse the json response
+    var response_objects = JSON.parse(responsetext);
+
+    top_10_gifs = response_objects["results"];
+
+    // load the GIFs -- for our example we will load the first GIFs preview size (nanogif) and share size (tinygif)
+
+    document.getElementById("preview_gif").src = top_10_gifs[0]["media"][0]["nanogif"]["url"];
+
+    document.getElementById("share_gif").src = top_10_gifs[0]["media"][0]["tinygif"]["url"];
+
+    return;
+
+}
+
+// callback for GIF categories
+function tenorCallback_categories(responsetext)
+{
+    // parse the json response
+    var response_objects = JSON.parse(responsetext);
+
+    categories = response_objects["tags"];
+
+    // load the categories - example is for the first category
+
+    // url to load:
+    var imgurl = categories[0]["image"];
+
+    // text to overlay on image:
+    var txt_overlay = categories[0]["name"];
+
+
+    // search to run if user clicks the category
+    var category_search_path = categories[0]["path"];
+
+    document.getElementById("category_gif").src = imgurl
+    document.getElementById("catgif_caption").innerHTML = txt_overlay
+    document.getElementById("cat_link").href = category_search_path
+
+    return;
+}
+
+// function to call the trending and category endpoints
+function grab_data()
+{
+    // set the apikey and limit
+    var apikey = "LIVDSRZULELA";
+    var lmt = 10;
+
+    // get the top 10 trending GIFs (updated through out the day) - using the default locale of en_US
+    var trending_url = "https://g.tenor.com/v1/trending?key=" + apikey + "&limit=" + lmt;
+
+
+    httpGetAsync(trending_url,tenorCallback_trending);
+
+    // get the current list of categories - using the default locale of en_US
+    var cat_url = "https://g.tenor.com/v1/categories?key=" + apikey;
+
+    httpGetAsync(cat_url,tenorCallback_categories);
+
+    // data will be loaded by each call's callback
+    return;
+}
+
+
+// SUPPORT FUNCTIONS ABOVE
+// MAIN BELOW
+
+// start the flow
+grab_data();
+
+</script>
+<style>
+.container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+.title {
+text-align: center;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+</style>
+
+<body>
+
+<h2 class="title">GIF loaded - preview image</h2>
+<div class="container">
+<img id="preview_gif" src="" alt="" style="">
+</div>
+
+<h2 class="title">GIF loaded - share image</h2>
+<div class="container">
+<img id="share_gif" src="" alt="" style="">
+</div>
+
+<h2 class="title">GIF Category</h2>
+<div class="container">
+    <a id="cat_link" href="">
+        <img id="category_gif" src="" alt="" style="">
+        <div id="catgif_caption" class="centered"></div>
+    </a>
+</div>
+
+</body>
+</html>

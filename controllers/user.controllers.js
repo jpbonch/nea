@@ -1,6 +1,6 @@
 const path = require("path");
 var helper = require('../helpers.js');
-
+var Filter = require('bad-words');
 
 
 function getLogin(req, res) {
@@ -100,6 +100,9 @@ async function postLogin(req, res) {
 async function postProfile (req, res) {
   console.log(req.body)
   var {newDisplayName, newImageUrl, newBiography} = req.body;
+  filter = new Filter();
+  newDisplayName = filter.clean(newDisplayName);
+  newBiography = filter.clean(newBiography);
 
   let db = helper.openDB();
   await db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}", biography="${newBiography}" WHERE userId=${req.userId}`, [],

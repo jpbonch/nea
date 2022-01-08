@@ -11,7 +11,31 @@
 <body>
   <%- include('./navbar.html'); %>
 
+    
     <div id="chatArea">
+
+      <div id="infoDiv">
+
+        <span id="dateInfo"><%= event.startTimeUTC %></span>
+  
+        <div id="teamDiv">
+          <span> <img class="teamImage" src="<%= event.hTeamLogo %>"> <%= event.hTeamFullName %></span>
+          <span> <img class="teamImage" src="<%= event.vTeamLogo %>"> <%= event.vTeamFullName %></span>
+        </div>
+  
+        <div id="scoreDiv">
+          <span><%= event.hTeamScore %></span>
+          <span><%= event.statusGame %></span>
+          <span><%= event.vTeamScore %></span>
+        </div>
+  
+        <div id="locationDiv">
+          <span><%= event.arena %></span>
+          <span><%= event.city %></span>
+         </div>
+  
+      </div>
+
     <div id="chatBox">
       <% for(message of messages.reverse()) { %>
             <div class="messageDiv">
@@ -26,9 +50,12 @@
     </div>
     <div id="inputDiv">
     <input type="text" id="messageInput"/>
+    <!-- <button id="gifButton">GIF</button> -->
+    
     <button id="submitMessageButton">SEND</button>
   </div>
 </div>
+<div id="gifBox"></div>
 
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
 <script>
@@ -93,6 +120,18 @@
         var date = new Date();
         return date.toISOString();
     }
+  </script>
+
+  <script>
+
+    document.getElementById("gifButton").addEventListener("click", (event) => {
+      var gifbox = document.getElementById("gifBox");
+      var rect = event.target.getBoundingClientRect()
+      gifbox.style.left = rect.x - 130 + "px";
+      gifbox.style.top = rect.y - 410 + "px";
+      gifbox.style.display = "block";
+    })
+
   </script>
 </body>
 </html>
