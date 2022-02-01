@@ -15,7 +15,7 @@ var Filter = require('bad-words');
 
 
 const app = express();
-app.use(express.json())
+app.use(express.json());
 app.use(express.static("public"));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
