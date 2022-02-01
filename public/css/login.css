@@ -1,8 +1,16 @@
 .failure{
-    width: 100px;
-    height: 50px;
-    background-color: red;
-  }
+  width: 100px;
+  height: 45px;
+  background-color: #F8D7DA;
+  width: 50%;
+  border: 2px solid darkred;
+  border-radius: 15px;
+  color:darkred;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
 
   body{
     font-family: 'Roboto', sans-serif;

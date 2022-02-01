@@ -27,7 +27,7 @@ async function postRegister(req, res) {
     var result = await helper.queryDB(db, sql, []);
     if(result.rows.length > 0){
       res.render('register', {
-            message: 'User already registered.',
+            message: 'Error: User already registered.',
             messageClass: 'failure'
         });
         db.close((err) => helper.errorCatch(err));
@@ -90,7 +90,7 @@ async function postLogin(req, res) {
       res.redirect('app');
     } else {
       res.render('login', {
-        message: 'Invalid username or password',
+        message: 'Invalid email or password',
         messageClass: 'failure'
     });
     }
@@ -103,6 +103,9 @@ async function postProfile (req, res) {
   filter = new Filter();
   newDisplayName = filter.clean(newDisplayName);
   newBiography = filter.clean(newBiography);
+
+  if(newDisplayName.length > 10) newDisplayName = newDisplayName.substring(0,10);
+  if(newBiography.length > 10) newBiography = newBiography.substring(0,10);
 
   let db = helper.openDB();
   await db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}", biography="${newBiography}" WHERE userId=${req.userId}`, [],
