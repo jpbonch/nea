@@ -40,6 +40,7 @@ app.use(async (req, res, next) => {
 app.use(userRouter);
 app.use(mainRouter);
 
+// Starts periodically updating the database with events
 startPolling();
 
 const server = http.createServer(app);
@@ -48,28 +49,9 @@ const io = new Server(server);
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     filter = new Filter();
+    // Clean message of profanity
     msg.content = filter.clean(msg.content);
+    // Emit signal to other clients
     io.emit('chat message', msg);
   });
 });
-
-// api more sports, future events, past events
-// limits on displayName length, pfp size, obscene filters
-// green border around username input not obscene
-// frontend
-// forgot password on login
-// remove old events
-// event details on chat page
-// pre match votes? 
-// voice messages
-// composite keys
-// chat room not unique, needs :sport
-
-//pagination
-// gif
-//update events tomorrow every 6 hours
-//update events today every few minutes
-// muting
-// improve code
-
-//done

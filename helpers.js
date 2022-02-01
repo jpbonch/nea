@@ -6,6 +6,7 @@ function formatDate(inputDateString){
   var inputDate = new Date(inputDateString);
   var todaysDate = new Date();
   if(inputDate.toDateString() == todaysDate.toDateString()) {
+     // Shorthand to add trailing zeroes
     var time = ("0" + inputDate.getHours()).slice(-2) + ':' + ("0" + inputDate.getMinutes()).slice(-2);
   } else {
     var time = inputDateString.split('T')[0];
@@ -16,8 +17,8 @@ function formatDate(inputDateString){
 
 function openDB(){
   let db = new sqlite3.Database(
-    `./database.db`, // can be nba,
-    sqlite3.OPEN_READWRITE,
+    `./database.db`,
+    sqlite3.OPEN_READWRITE, // Pick db mode: can be read, write, read/write
     (err) => {
       if (err) {console.error(err.message);}
     }
@@ -38,6 +39,7 @@ function hashPassword(password) {
 }
 
 function genAuthToken(){
+    // 30 bytes used, so 60 chars in total (One hex char = 4 bits)
     return crypto.randomBytes(30).toString('hex');
 }
 
@@ -47,6 +49,7 @@ function queryDB(db, sql, params){
       if(error){
         reject(error);
       } else {
+        // Resolution of Promise
         resolve({rows:rows})
       }
     })
@@ -64,6 +67,7 @@ function sortSports(events){
   return sortedEvents;
 }
 
+// Exporting functions
 module.exports = {
   formatDate: formatDate,
   openDB: openDB,
