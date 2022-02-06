@@ -3,8 +3,8 @@ const fetch = require("node-fetch");
 require('dotenv').config()
 
 
-
 class Event {
+  // Every match, game or race gets initialised into an Event object
   constructor(eventId, sport, startTimeUTC, statusGame, league, arena, city, country, 
     currentPeriod, vTeamShortName, vTeamFullName, vTeamLogo, vTeamScore, hTeamShortName, 
     hTeamFullName, hTeamLogo, hTeamScore){
@@ -27,12 +27,14 @@ class Event {
     this.hTeamScore = hTeamScore;
   }
 
+  // List used to pass into the SQL query
   getList(){
     return [this.eventId, this.sport, this.startTimeUTC, this.statusGame, this.league, this.arena,
        this.city, this.country, this.currentPeriod, this.vTeamShortName, this.vTeamFullName, 
        this.vTeamLogo, this.vTeamScore, this.hTeamShortName, this.hTeamFullName, this.hTeamLogo, this.hTeamScore];
   } 
 
+  // This composite primary key ensures uniqueness
   getPrimaryKey(){
     return this.eventId + this.sport;
   }
@@ -44,14 +46,14 @@ async function updateDatabase(data){
     var events = [];
     for (sport in data){
         for (game of data[sport].response) {
-          console.log(sport)
-          console.log(game)
           if (sport == "formula1"){
             events.push(new Event(game.id, "formula1", game.date, game.status, game.competition.name, 
             game.circuit.name, game.competition.location.city, game.competition.location.country, game.laps.current,
             "", "", "", "",
             "", "", "", ""));
           } else {
+            // Standardising the game object: different APIs return different game objects,
+            // so here I convert them into the same format by 'renaming' properties
           if (sport == "basketball"){
             game.arena = game.stage;
             game.scores.away = game.scores.away.total;
@@ -72,8 +74,9 @@ async function updateDatabase(data){
             game.scores.away = game.goals.away;
             game.scores.home = game.goals.home;
           }
-
-            events.push(new Event(game.id, "rugby", game.date, game.status.long, game.league.name, game.arena, game.city, 
+            // Now, the game object for every sport is the same and can be written to the database
+            // in the same way
+            events.push(new Event(game.id, sport, game.date, game.status.long, game.league.name, game.arena, game.city, 
             game.country.name, game.status.short, game.teams.away.name, game.teams.away.name, game.teams.away.logo, game.scores.away,
             game.teams.home.name, game.teams.home.name, game.teams.home.logo, game.scores.home));
           }
@@ -82,6 +85,7 @@ async function updateDatabase(data){
 
     let db = await helper.openDB();
     for (sportEvent of events){
+    // REPLACE INTO is used so the same event is not added twice
     await db.run(`REPLACE INTO "events" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, sportEvent.getList(), 
     function(err) {if (err) {console.error(err.message)}
                   console.log(`A row has been inserted with rowid ${this.lastID}`);
@@ -94,8 +98,8 @@ async function updateDatabase(data){
 
 
 async function fetchEvents() {
-    var today = new Date()
-    var todayString = today.toISOString().split('T')[0]
+    var today = new Date();
+    var todayString = today.toISOString().split('T')[0];
 
     var endpoints = [
       {url: "https://api-football-v1.p.rapidapi.com/v3/fixtures?season=2022&date=" + todayString,
@@ -120,6 +124,7 @@ async function fetchEvents() {
     
     var events = {}
 
+    // Loops through every endpoint in the big array to find new events
     for (endpoint of endpoints){
       var response = await fetch(endpoint.url, {headers: endpoint.headers});
       var jsonResult = await response.json();
@@ -130,7 +135,8 @@ async function fetchEvents() {
 }
 
 async function startPolling() {
-  var minutes = 10000;
+  // Infinite interval to keep updating events every 5 minutes
+  var minutes = 30;
   var interval = minutes * 60 * 1000;
   setInterval(async () => {
     var events = await fetchEvents();

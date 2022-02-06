@@ -28,8 +28,6 @@ nav{
   right: 10px
 }
 
-
-
 #searchBar{
   width: 300px;
   height: 45px;
@@ -55,7 +53,6 @@ nav{
 #searchSelect:hover{
   cursor: pointer;
 }
-
 
 #selectEventDiv{
   position: fixed;

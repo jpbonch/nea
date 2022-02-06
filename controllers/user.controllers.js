@@ -7,10 +7,12 @@ function getLogin(req, res) {
   res.render('login');
 }
 
+
 function getRegister(req, res) {
   // Render register.html when user visits /register
   res.render("register")
 }
+
 
 async function postRegister(req, res) {
   var { email, password, confirmPassword } = req.body;
@@ -75,6 +77,7 @@ async function getProfile(req, res) {
   db.close((err) => helper.errorCatch(err));
 }
 
+
 async function postLogin(req, res) {
     var { email, password } = req.body;
     var hash = helper.hashPassword(password);
@@ -102,16 +105,21 @@ async function postLogin(req, res) {
     db.close((err) => helper.errorCatch(err));
 }
 
+
 async function postProfile (req, res) {
-  console.log(req.body)
   var {newDisplayName, newImageUrl, newBiography} = req.body;
   filter = new Filter();
+  
+  // Clean new inputs of profanity
   newDisplayName = filter.clean(newDisplayName);
+  console.log(newBiography)
   newBiography = filter.clean(newBiography);
 
-  if(newDisplayName.length > 10) newDisplayName = newDisplayName.substring(0,10);
-  if(newBiography.length > 10) newBiography = newBiography.substring(0,10);
+  // Limits the new inputs to a certain number of characters
+  if(newDisplayName.length > 20) newDisplayName = newDisplayName.substring(0, 20);
+  if(newBiography.length > 150) newBiography = newBiography.substring(0, 150);
 
+  // Update the new display name and biography to the database
   let db = helper.openDB();
   await db.run(`UPDATE "users" SET displayName="${newDisplayName}", profilePicture="${newImageUrl}", biography="${newBiography}" WHERE userId=${req.userId}`, [],
          (err) => helper.errorCatch(err));
@@ -120,8 +128,10 @@ async function postProfile (req, res) {
   res.sendStatus(200);
 }
 
+
 async function getLogout(req, res) {
   let db = helper.openDB();
+  // Delete authToken from database
   await db.run(`UPDATE "users" SET authToken=NULL WHERE userId=${req.userId}`, [],
          (err) => helper.errorCatch(err));
 
@@ -130,8 +140,10 @@ async function getLogout(req, res) {
   res.redirect("/");
 }
 
+
 async function getDelete(req, res) {
   let db = helper.openDB();
+  // Delete the whole row where userId matches
   await db.run(`DELETE FROM "users" WHERE userId=${req.userId}`, [],
          (err) => helper.errorCatch(err));
   db.close((err) => helper.errorCatch(err));
@@ -149,6 +161,7 @@ async function postChangePassword(req, res) {
   var query = `SELECT passwordHash FROM users WHERE userId=${req.userId}`;
   var result = await helper.queryDB(db, query, []);
   if (result.rows[0].passwordHash == hash){
+    // If password hash matches hash in database
     await db.run(`UPDATE "users" SET passwordHash="${newHash}" WHERE userId=${req.userId}`, [],
              (err) => helper.errorCatch(err));
     res.send({response: "Succesfully changed password.", class:"success"})
@@ -159,7 +172,7 @@ async function postChangePassword(req, res) {
 }
 
 
-
+// Export all functions used
 module.exports = {
   getLogin,
   postRegister,

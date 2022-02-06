@@ -10,6 +10,7 @@ require('dotenv').config()
 var userRouter = require('./routes/user.routes.js');
 var mainRouter = require('./routes/main.routes.js');
 var startPolling = require('./models/poll.js');
+var startDeleting = require('./models/delete.js');
 var Filter = require('bad-words');
 
 
@@ -42,6 +43,8 @@ app.use(mainRouter);
 
 // Starts periodically updating the database with events
 startPolling();
+startDeleting();
+
 
 const server = http.createServer(app);
 server.listen(80, () => {console.log('listening on port 80')});
@@ -50,7 +53,7 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     filter = new Filter();
     // Clean message of profanity
-    msg.content = filter.clean(msg.content);
+    msg.content = filter.clean(msg.content || "");
     // Emit signal to other clients
     io.emit('chat message', msg);
   });

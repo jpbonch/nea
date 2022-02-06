@@ -7,7 +7,7 @@ function getIndex(req, res) {
 
 async function getApp(req, res) {
   var db = helper.openDB();
-  var query = `SELECT * FROM events ORDER BY startTimeUTC ASC`;
+  var query = `SELECT * FROM events ORDER BY startTimeUTC DESC`;
   var {rows} = await helper.queryDB(db, query, []);
   var events = helper.sortSports(rows);
   if (req.userId){ // If user is logged in
@@ -78,7 +78,7 @@ async function getSearch(req, res) {
   } else {
     var condition = `${key} LIKE '%${req.query[key]}%'`;
   }
-  var sql = `SELECT * FROM events WHERE ${condition} ORDER BY startTimeUTC ASC`
+  var sql = `SELECT * FROM events WHERE ${condition} ORDER BY startTimeUTC DESC`
   var result = await helper.queryDB(db, sql, []);
 
   var query = `SELECT displayName, profilePicture FROM users WHERE userId=${req.userId}`;
